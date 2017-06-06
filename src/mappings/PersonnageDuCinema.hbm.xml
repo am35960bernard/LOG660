@@ -3,7 +3,8 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="PersonnageDuCinema" table="PERSONNAGEDUCINEMA">
+
+    <class name="Model.PersonnageDuCinema" table="PERSONNAGEDUCINEMA">
         <id name="idPersonneDuCinema" type="int">
             <column name="IDPERSONNAGEDUCINEMA" />
             <generator class="assigned" />
@@ -25,11 +26,11 @@
         </property>
 
                
-	    <joined-subclass name="Acteur" table="ACTEUR">
+	    <joined-subclass name="Model.Acteur" table="ACTEUR">
 	        <key column="IDACTEUR"/>
 	    </joined-subclass>	    
 
-	    <joined-subclass name="Realisateur" table="REALISATEUR">
+	    <joined-subclass name="Model.Realisateur" table="REALISATEUR">
 	        <key column="IDREALISATEUR"/>
 	    </joined-subclass>	 
 

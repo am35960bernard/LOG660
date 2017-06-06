@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="Film" table="FILM">
+    <class name="Model.Film" table="FILM">
         <id name="idFilm" type="int">
             <column name="IDFILM" />
             <generator class="assigned" />

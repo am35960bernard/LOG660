@@ -1,8 +1,15 @@
+package Main;
 import java.util.Date;
 import java.util.Random;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import Model.Acteur;
+import Model.Film;
+import Model.HibernateUtil;
+import Model.PersonnageDuCinema;
 
 public class Main {
 	public static void main(String[] args) {
@@ -29,7 +36,7 @@ public class Main {
 			System.out.println("Un nouveau acteur vient d'être inséré dans la base de données");			
 			System.out.println("Un nouveau film vient d'être inséré dans la base de données");
 			
-			transaction.commit();
+		//	transaction.commit();
 		} catch (HibernateException e) {
 			transaction.rollback();
 			e.printStackTrace();

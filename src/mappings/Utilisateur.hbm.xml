@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 2017-06-04 00:07:19 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
-    <class name="Utilisateur" table="UTILISATEUR">
+    <class name="Model.Utilisateur" table="UTILISATEUR">
         <id name="idUtilisateur" type="int">
             <column name="IDUTILISATEUR" />
             <generator class="assigned" />
@@ -30,7 +30,7 @@
             <column name="IDADRESSE" />
         </property> 
         
-	    <joined-subclass name="Client" table="CLIENT">
+	    <joined-subclass name="Model.Client" table="CLIENT">
 	        <key column="IDCLIENT"/>
        		<property name="idForfait" type="int">
             	<column name="IDFORFAIT" />

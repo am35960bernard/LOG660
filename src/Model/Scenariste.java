@@ -1,3 +1,4 @@
+package Model;
 
 public class Scenariste implements java.io.Serializable {
 

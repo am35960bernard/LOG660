@@ -1,3 +1,4 @@
+package Model;
 import java.util.Date;
 
 public class PersonnageDuCinema implements java.io.Serializable {

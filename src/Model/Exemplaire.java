@@ -1,3 +1,4 @@
+package Model;
 
 public class Exemplaire implements java.io.Serializable {
 

@@ -1,3 +1,4 @@
+package Model;
 import java.util.Date;
 
 public class Client extends Utilisateur implements java.io.Serializable {

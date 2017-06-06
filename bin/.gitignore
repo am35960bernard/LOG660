@@ -1,0 +1,9 @@
+/Kernel/
+/Model/
+/Main/
+/hibernate.cfg.xml
+/Film.hbm.xml
+/PersonnageDuCinema.hbm.xml
+/Utilisateur.hbm.xml
+/hibernate.reveng.xml
+/mappings/

@@ -1,3 +1,4 @@
+package Model;
 
 public class Genre implements java.io.Serializable {
 

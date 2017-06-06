@@ -1,3 +1,4 @@
+package Model;
 
 public class Adresse implements java.io.Serializable {
 
