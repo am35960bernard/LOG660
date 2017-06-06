@@ -27,7 +27,7 @@ public class Main {
 			Query query = sessionHome.createQuery(hql);
 			query.setInteger("unNombre",2431);
 			List results =  (List) query.list();
-			System.out.println( ((Client)results.get(0)).getPrenom());			
+			System.out.println( ((Client)results.get(0)).getPrenom());		
 
 
 			
