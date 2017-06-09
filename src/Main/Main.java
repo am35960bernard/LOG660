@@ -1,4 +1,5 @@
 package Main;
+import java.awt.EventQueue;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -8,30 +9,37 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import Controllers.LoginController;
 import Model.Acteur;
 import Model.Client;
+import Model.CourtierBdUtilisateur;
 import Model.Film;
 import Model.HibernateUtil;
 import Model.PersonnageDuCinema;
+import UI.LoginWindow;
 
 public class Main {
 	public static void main(String[] args) {
 
-		Session sessionHome = HibernateUtil.getSessionFactory().openSession();
+				
+		Session sessionTest = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaction = null;
+		
+		
 		try {
-			transaction = sessionHome.beginTransaction();
+						
+			transaction = sessionTest.beginTransaction();
 
 
 			String hql = "from Client where idClient = :unNombre";
-			Query query = sessionHome.createQuery(hql);
+			Query query = sessionTest.createQuery(hql);
 			query.setInteger("unNombre",2431);
-			List results =  (List) query.list();
-			System.out.println( ((Client)results.get(0)).getPrenom());		
+			List<Client> results =   query.list();
+			System.out.println( results.get(0).getPrenom());		
 
 
 			
-/*******	EXEMPLE DE CODE D'INSSERSSION ICI   *******
+/*******	EXEMPLE DE CODE D'INSSERTION ICI   *******
 		
 			Random randomGenerator = new Random();
 			int randomInt = randomGenerator.nextInt(100000) + 4000000;
@@ -47,9 +55,37 @@ public class Main {
 			transaction.rollback();
 			e.printStackTrace();
 		} finally {
-			sessionHome.close();
+			sessionTest.close();
 		}
 
+
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+										
+					LoginController loginController = new LoginController();
+					CourtierBdUtilisateur loginModel 	= new CourtierBdUtilisateur();
+					LoginWindow loginView 	= new LoginWindow();
+
+					 
+					loginModel.addObserver(loginView);
+					
+					loginController.addModel(loginModel);
+					loginController.addView(loginView);
+
+					loginView.addController(loginController);
+					
+					loginView.setVisible(true);
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});			
+		
+		
 	}
 }
 
