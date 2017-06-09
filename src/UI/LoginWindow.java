@@ -1,51 +1,66 @@
 package UI;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+
+import Controllers.Observer;
+
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.Color;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
-public class LoginWindow extends JFrame {
 
+public class LoginWindow extends JFrame implements Observer{
+
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtNomUtilisateur;
-	private JTextField txtMotDePasse;
+	private JTextField txtCourrielUtilisateur;
+	private JTextField txtMotDePasseUtilisateur;
+	private JButton btnConnexion;
+	private JLabel lblValiditeDeConnexion;
+
+	public void addController (ActionListener controller){
+		btnConnexion.addActionListener(controller);
+	}	
+	
+	public void update(String str) {
+		Color couleurValiditeConnexion = null;
+		String messageValiditeConnexion = "";
+		
+		if(str == null){
+			couleurValiditeConnexion = new Color(204, 0, 0);
+			messageValiditeConnexion = "Erreur de connexion.";
+			txtCourrielUtilisateur.setText("");
+			txtMotDePasseUtilisateur.setText("");
+		}else if(str != null){
+			couleurValiditeConnexion = new Color(0, 102, 51);
+			messageValiditeConnexion = "Bonjour "+ str + " !";
+		}
+		
+		lblValiditeDeConnexion.setText(messageValiditeConnexion);
+		lblValiditeDeConnexion.setForeground(couleurValiditeConnexion);
+	} 
+
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginWindow frame = new LoginWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
+	 * Create the login frame.
 	 */
 	public LoginWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 158);
+		setBounds(100, 100, 450, 200);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -55,14 +70,8 @@ public class LoginWindow extends JFrame {
 		contentPane.add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnConnexion = new JButton("Connexion");
-		btnConnexion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//Exemple de manipulation des controles...
-				String texte = txtNomUtilisateur.getText();
-				txtNomUtilisateur.setText("Allo!");
-			}
-		});
+		btnConnexion = new JButton("Connexion");
+				
 		panel.add(btnConnexion);
 		
 		JPanel panel_1 = new JPanel();
@@ -78,19 +87,35 @@ public class LoginWindow extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
-		JLabel lblNomDutilisateur = new JLabel("Nom d'utilisateur:");
+		JLabel lblNomDutilisateur = new JLabel("Adresse courriel:");
 		panel_1.add(lblNomDutilisateur, "2, 2, right, default");
 		
-		txtNomUtilisateur = new JTextField();
-		panel_1.add(txtNomUtilisateur, "4, 2, fill, default");
-		txtNomUtilisateur.setColumns(10);
+		txtCourrielUtilisateur = new JTextField();
+		txtCourrielUtilisateur.setText("WilmaSHuff27@hotmail.com");
+		panel_1.add(txtCourrielUtilisateur, "4, 2, fill, default");
+		txtCourrielUtilisateur.setColumns(10);
 		
 		JLabel lblMotDePasse = new JLabel("Mot de passe:");
 		panel_1.add(lblMotDePasse, "2, 4, right, default");
 		
-		txtMotDePasse = new JTextField();
-		panel_1.add(txtMotDePasse, "4, 4, fill, default");
-		txtMotDePasse.setColumns(10);
+		txtMotDePasseUtilisateur = new JTextField();
+		txtMotDePasseUtilisateur.setText("Thi0ruimie");
+		panel_1.add(txtMotDePasseUtilisateur, "4, 4, fill, default");
+		txtMotDePasseUtilisateur.setColumns(10);
+		
+		lblValiditeDeConnexion = new JLabel("Connexion");
+		lblValiditeDeConnexion.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblValiditeDeConnexion.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(lblValiditeDeConnexion, BorderLayout.NORTH);
+
+	}
+	 
+	public JTextField getTxtCourrielUtilisateur(){
+    	return txtCourrielUtilisateur;
+	}
+
+	public JTextField getTxtMotDePasseUtilisateur() {
+		return txtMotDePasseUtilisateur;
 	}
 
 }
