@@ -20,10 +20,10 @@ public class LoginController implements java.awt.event.ActionListener{
 	
 	public void actionPerformed(java.awt.event.ActionEvent e){
 		
-		String txtNomUtilisateur = (this.view.getTxtCourrielUtilisateur().getText()).trim();
-		String txtMotDePasse = (this.view.getTxtMotDePasseUtilisateur().getText()).trim();
+		String txtCourrielUtilisateur = (this.view.getTxtCourrielUtilisateur().getText()).trim();
+		String txtMotDePasseUtilisateur = (this.view.getTxtMotDePasseUtilisateur().getText()).trim();
 		
-		model.validateAuthentication(txtNomUtilisateur, txtMotDePasse);
+		model.validateAuthentication(txtCourrielUtilisateur, txtMotDePasseUtilisateur);
 	} 
 
 	
