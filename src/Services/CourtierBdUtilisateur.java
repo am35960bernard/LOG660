@@ -1,4 +1,4 @@
-package Model;
+package Services;
 
 import java.util.List;
 
@@ -7,9 +7,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import Model.Client;
+import Model.Observable;
+
 public class CourtierBdUtilisateur extends Observable{
 
-	public void validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur){
+	public String validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur){
 		
 		Session sessionAuthentication = HibernateUtil.getSessionFactory().openSession();
 		Transaction transactionAuthentication = null;
@@ -37,10 +40,9 @@ public class CourtierBdUtilisateur extends Observable{
 			e.printStackTrace();
 		} finally {
 			sessionAuthentication.close();
-			this.notifyObserver(authenticationIdUser);
 		}
 	
-		
+		return authenticationIdUser;
 	}
 
 }

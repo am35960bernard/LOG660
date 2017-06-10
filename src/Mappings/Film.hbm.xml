@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="Model.Film" table="FILM">
+        <id name="idFilm" type="int">
+            <column name="IDFILM" />
+            <generator class="assigned" />
+        </id>
+        <property name="titre" type="java.lang.String">
+            <column name="TITRE" />
+        </property>
+        <property name="anneeSortie" type="int">
+            <column name="ANNEESORTIE" />
+        </property>
+        <property name="langueOriginale" type="java.lang.String">
+            <column name="LANGUEORIGINALE" />
+        </property>
+        <property name="duree" type="int">
+            <column name="DUREEMINUTE" />
+        </property>
+        <property name="resume" type="java.lang.String">
+            <column name="RESUME" />
+        </property>
+        <property name="photo" type="java.lang.String">
+            <column name="LIENPOSTER" />
+        </property>
+    </class>
+</hibernate-mapping>

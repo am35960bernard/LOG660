@@ -1,15 +1,15 @@
 package Controllers;
 
-import Model.CourtierBdUtilisateur;
+import Model.GestionnaireDeConnexion;
 import UI.LoginWindow;
 
 
 public class LoginController implements java.awt.event.ActionListener{
 
-	CourtierBdUtilisateur model;
+	GestionnaireDeConnexion model;
 	LoginWindow view;	
 	
-	public void addModel(CourtierBdUtilisateur model){
+	public void addModel(GestionnaireDeConnexion model){
 		this.model = model;
 	} 
 
@@ -23,7 +23,7 @@ public class LoginController implements java.awt.event.ActionListener{
 		String txtCourrielUtilisateur = (this.view.getTxtCourrielUtilisateur().getText()).trim();
 		String txtMotDePasseUtilisateur = (this.view.getTxtMotDePasseUtilisateur().getText()).trim();
 		
-		model.validateAuthentication(txtCourrielUtilisateur, txtMotDePasseUtilisateur);
+		model.connect(txtCourrielUtilisateur, txtMotDePasseUtilisateur);
 	} 
 
 	
