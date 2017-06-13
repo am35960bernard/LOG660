@@ -1,11 +1,31 @@
 package Model;
-public class Forfait implements java.io.Serializable {
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="FORFAIT")
+public class Forfait implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+    @Column(name="IDFORFAIT")
+    @GeneratedValue
 	private int idForfait;
+	
+	@Column(name="NOM")
 	private String nom;
+	
+	@Column(name="COUTMENSUEL")
 	private float coutMensuel;
+	
+	@Column(name="LOCATIONMAXFILMS")
 	private int locationMaxFilms;
+	
+	@Column(name="DUREEMAXJOURS")
 	private int dureeMaxJours;
 	
 	public Forfait() {

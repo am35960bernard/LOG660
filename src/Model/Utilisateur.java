@@ -1,17 +1,51 @@
 package Model;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="UTILISATEUR")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class Utilisateur implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+	
+    @Id
+    @Column(name="IDUTILISATEUR")
+    @GeneratedValue
 	protected int idUtilisateur;
+    
+    @Column(name="NOM")
 	protected String nom;
+	
+    @Column(name="PRENOM")
 	protected String prenom;
+	
+    @Column(name="MOTDEPASSE")
 	protected String motDePasse;
+	
+    @Column(name="COURRIEL")
 	protected String courriel;
+	
+    @Column(name="NOTELEPHONE")
 	protected String noTelephone;
+	
+    @Column(name="DATEANNIVERSAIRE")
 	protected Date dateAnniversaire;
+	
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="IDADRESSE")
 	protected int idAdresse;
 
+	
 	public Utilisateur(){};
 	
 	public Utilisateur(int idUtilisateur,String nom,String prenom,String motDePasse,String courriel,String noTelephone,Date dateAnniversaire,int idAdresse) {

@@ -1,13 +1,27 @@
 package Model;
 import java.util.Date;
 
-public class Client extends Utilisateur implements java.io.Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="CLIENT")
+public class Client extends Utilisateur implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	
-	private int idForfait;
+	@Id
+    @Column(name="IDCLIENT")
 	private int IdClient = idUtilisateur;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="IDFORFAIT")
+	private int idForfait;
 
 	public Client(){};	
 	

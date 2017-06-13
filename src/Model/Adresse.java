@@ -1,16 +1,34 @@
 package Model;
 
-public class Adresse implements java.io.Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="ADRESSE")
+public class Adresse implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+    @Column(name="IDADRESSE")
+    @GeneratedValue
 	private int idAdresse;
-	private String codePostale;
+	
+	@Column(name="CODEPOSTAL")
+	private String codePostal;
+	
+	@Column(name="PROVINCE")
 	private String province;
+	
+	@Column(name="VILLE")
 	private String ville;
+	
+	@Column(name="NUMCIVIQUE")
 	private int numeroCivique;
 	
-	public Adresse() {
-	}
+	public Adresse() {}
 
 	public int getIdAdresse() {
 		return idAdresse;
@@ -21,11 +39,11 @@ public class Adresse implements java.io.Serializable {
 	}
 
 	public String getCodePostale() {
-		return codePostale;
+		return codePostal;
 	}
 
 	public void setCodePostale(String codePostale) {
-		this.codePostale = codePostale;
+		this.codePostal = codePostale;
 	}
 
 	public String getProvince() {

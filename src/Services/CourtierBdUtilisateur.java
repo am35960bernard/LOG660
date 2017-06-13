@@ -8,9 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import Model.Client;
-import Model.Observable;
 
-public class CourtierBdUtilisateur extends Observable{
+public class CourtierBdUtilisateur {
 
 	public String validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur) {
 		
