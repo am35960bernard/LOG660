@@ -1,5 +1,7 @@
 package Model;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -41,15 +43,13 @@ public class Utilisateur implements java.io.Serializable {
     @Column(name="DATEANNIVERSAIRE")
 	protected Date dateAnniversaire;
 	
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="IDADRESSE")
-	protected int idAdresse;
+    @OneToMany(mappedBy="utilisateur")
+	protected Set<Adresse> adresses = new HashSet<Adresse>(0);
 
 	
 	public Utilisateur(){};
 	
-	public Utilisateur(int idUtilisateur,String nom,String prenom,String motDePasse,String courriel,String noTelephone,Date dateAnniversaire,int idAdresse) {
-		this.idUtilisateur = idUtilisateur;
+	/*public Utilisateur(String nom,String prenom,String motDePasse,String courriel,String noTelephone,Date dateAnniversaire,int idAdresse) {
 		this.nom = nom;
 		this.prenom = prenom;
 		this.motDePasse = motDePasse;
@@ -57,7 +57,7 @@ public class Utilisateur implements java.io.Serializable {
 		this.noTelephone = noTelephone;
 		this.dateAnniversaire = dateAnniversaire;
 		this.idAdresse = idAdresse;	
-	}
+	}*/
 
 	public int getIdUtilisateur() {
 		return idUtilisateur;
@@ -115,12 +115,12 @@ public class Utilisateur implements java.io.Serializable {
 		this.noTelephone = noTelephone;
 	}
 
-	public int getIdAdresse() {
-		return idAdresse;
+	public Set<Adresse> getAdresses() {
+		return adresses;
 	}
 
-	public void setIdAdresse(int idAdresse) {
-		this.idAdresse = idAdresse;
+	public void setIdAdresse(HashSet<Adresse> adresses) {
+		this.adresses = adresses;
 	}
 
 }

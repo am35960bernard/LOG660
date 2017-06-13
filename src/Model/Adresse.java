@@ -2,8 +2,11 @@ package Model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,6 +30,10 @@ public class Adresse implements java.io.Serializable {
 	
 	@Column(name="NUMCIVIQUE")
 	private int numeroCivique;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="IDUTILISATEUR")
+	private Utilisateur utilisateur;
 	
 	public Adresse() {}
 
@@ -70,4 +77,12 @@ public class Adresse implements java.io.Serializable {
 		this.numeroCivique = numeroCivique;
 	}
 
+	public Utilisateur getUtilisateur() {
+		return utilisateur;
+	}
+	
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
+	}
+	
 }
