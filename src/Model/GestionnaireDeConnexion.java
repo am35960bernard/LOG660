@@ -6,7 +6,6 @@ import Services.CourtierBdUtilisateur;
 public class GestionnaireDeConnexion extends Observable{
 
 	public GestionnaireDeConnexion() {}
-		
 
 	public void connect(String txtCourrielUtilisateur,String txtMotDePasseUtilisateur){
 		

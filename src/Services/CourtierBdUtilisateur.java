@@ -12,7 +12,7 @@ import Model.Observable;
 
 public class CourtierBdUtilisateur extends Observable{
 
-	public String validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur){
+	public String validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur) {
 		
 		Session sessionAuthentication = HibernateUtil.getSessionFactory().openSession();
 		Transaction transactionAuthentication = null;
@@ -25,12 +25,12 @@ public class CourtierBdUtilisateur extends Observable{
 				
 			String hql = "from Client where courriel like :utilisateurCourriel and motDePasse like :utilisateurMotDePasse";			
 			Query query = sessionAuthentication.createQuery(hql);
-			query.setParameter("utilisateurCourriel",txtCourrielUtilisateur);
-			query.setParameter("utilisateurMotDePasse",txtMotDePasseUtilisateur);
+			query.setParameter("utilisateurCourriel", txtCourrielUtilisateur);
+			query.setParameter("utilisateurMotDePasse", txtMotDePasseUtilisateur);
 			List<Client> results = query.list();
 			
 	        if (results.size() > 0) {
-	        	authenticationIdUser =  results.get(0).getPrenom();
+	        	authenticationIdUser = results.get(0).getPrenom();
 	        	results.clear();
 	        }
 
