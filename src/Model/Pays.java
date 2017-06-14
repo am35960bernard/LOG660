@@ -13,38 +13,38 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="SCENARISTE")
-public class Scenariste implements java.io.Serializable {
+@Table(name="PAYS")
+public class Pays implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @Column(name="IDSCENARISTE")
+    @Column(name="IDPAYS")
     @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
-	@SequenceGenerator(name="SEQ", sequenceName="SEQ_SCENARISTE")
-	private int idScenariste;
+	@SequenceGenerator(name="SEQ", sequenceName="SEQ_ADRESSE")
+	private int idPays;
 	
-	@Column(name="NOMSCENARISTE")
-	private String nomScenariste;
+	@Column(name="NOM")
+	private String nom;
 	
-	@ManyToMany(mappedBy="scenaristes")
+	@ManyToMany(mappedBy="pays")
 	private Set<Film> films = new HashSet<Film>(0);
 	
-	public Scenariste() {}
+	public Pays(){}
 
-	public int getIdScenariste() {
-		return idScenariste;
+	public int getIdPays() {
+		return idPays;
 	}
 
-	public void setIdScenariste(int idScenariste) {
-		this.idScenariste = idScenariste;
+	public void setIdPays(int idPays) {
+		this.idPays = idPays;
 	}
 
-	public String getNomScenariste() {
-		return nomScenariste;
+	public String getNom() {
+		return nom;
 	}
 
-	public void setNomScenariste(String nomScenariste) {
-		this.nomScenariste = nomScenariste;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
 	public Set<Film> getFilms() {
@@ -54,5 +54,4 @@ public class Scenariste implements java.io.Serializable {
 	public void setFilms(Set<Film> films) {
 		this.films = films;
 	}
-
 }

@@ -1,30 +1,45 @@
 package Model;
 
-public class Exemplaire implements java.io.Serializable {
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="EXEMPLAIRE")
+public class Exemplaire implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-	private int numeroCopie;
-	private int idFilm;
+	
+	@Id
+    @Column(name="IDEXEMPLAIRE")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
+	@SequenceGenerator(name="SEQ", sequenceName="SEQ_EXEMPLAIRE")
+	private int idExemplaire;
+	
+	@ManyToOne
+    @JoinColumn(name="IDFILM")
+	private Film film;
+	
+	@Column(name="NUMCOPIE")
+	private int numCopie;
+	
+	@Column(name="ESTLOUE")
 	private boolean estLoue;
 	
-	public Exemplaire() {
-	}
-
-	public int getNumeroCopie() {
-		return numeroCopie;
-	}
-
-	public int getIdFilm() {
-		return idFilm;
-	}
-
-	public void setIdFilm(int idFilm) {
-		this.idFilm = idFilm;
-	}
-
-	public void setNumeroCopie(int numeroCopie) {
-		this.numeroCopie = numeroCopie;
-	}
+	@OneToMany(mappedBy="exemplaire")
+	protected Set<Location> locations = new HashSet<Location>(0);
+	
+	
+	public Exemplaire() {}
 
 	public boolean isEstLoue() {
 		return estLoue;
@@ -32,6 +47,38 @@ public class Exemplaire implements java.io.Serializable {
 
 	public void setEstLoue(boolean estLoue) {
 		this.estLoue = estLoue;
+	}
+	
+	public Set<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(Set<Location> locations) {
+		this.locations = locations;
+	}
+
+	public int getIdExemplaire() {
+		return idExemplaire;
+	}
+
+	public void setIdExemplaire(int idExemplaire) {
+		this.idExemplaire = idExemplaire;
+	}
+
+	public Film getFilm() {
+		return film;
+	}
+
+	public void setFilm(Film film) {
+		this.film = film;
+	}
+
+	public int getNumCopie() {
+		return numCopie;
+	}
+
+	public void setNumCopie(int numCopie) {
+		this.numCopie = numCopie;
 	}
 
 }

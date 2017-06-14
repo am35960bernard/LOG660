@@ -1,24 +1,30 @@
 package Model;
-import java.util.Date;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="REALISATEUR")
+@PrimaryKeyJoinColumn(name="IDREALISATEUR", referencedColumnName="IDPERSONNAGEDUCINEMA")
 public class Realisateur extends PersonnageDuCinema implements java.io.Serializable {
-	
 	private static final long serialVersionUID = 1L;
-	private int idRealisateur;
 
-	public Realisateur (){};	
-		
-	public Realisateur(int idPersonneDuCinema,String nomComplet,Date dateAnniversaire,String lieuNaissance,String biographie,String lienPhoto) {
-		super(idPersonneDuCinema,nomComplet,dateAnniversaire,lieuNaissance,biographie,lienPhoto);
-		this.idRealisateur = idPersonneDuCinema;
-	}	
+	@ManyToMany(mappedBy="realisateurs")
+	private Set<Film> films = new HashSet<Film>(0);
 	
-	public int getIdRealisateur() {
-		return idRealisateur;
+	public Realisateur (){};
+	
+	public Set<Film> getFilms() {
+		return films;
 	}
 
-	public void setIdRealisateur(int idRealisateur) {
-		this.idRealisateur = idRealisateur;
+	public void setFilms(Set<Film> films) {
+		this.films = films;
 	}
 
 }

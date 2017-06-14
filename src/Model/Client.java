@@ -1,8 +1,13 @@
 package Model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -12,16 +17,14 @@ import javax.persistence.Table;
 public class Client extends Utilisateur implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne//(fetch=FetchType.EAGER, targetEntity=Forfait.class)
+	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="IDFORFAIT")
 	private Forfait forfait;
 
-	public Client(){};	
+	@OneToMany(mappedBy="client")
+	private Set<Location> locations = new HashSet<Location>(0);
 	
-	/*public Client(String nom,String prenom,String motDePasse,String courriel,String noTelephone,Date dateAnniversaire,int idAdresse,int idForfait) {
-		super(nom,prenom,motDePasse,courriel,noTelephone,dateAnniversaire,idAdresse);
-		this.idForfait = idForfait;
-	}*/
+	public Client(){};	
 
 	public Forfait getForfait() {
 		return forfait;
@@ -29,6 +32,14 @@ public class Client extends Utilisateur implements java.io.Serializable {
 
 	public void setForfait(Forfait forfait) {
 		this.forfait = forfait;
+	}
+
+	public Set<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(Set<Location> locations) {
+		this.locations = locations;
 	}
 	
 }

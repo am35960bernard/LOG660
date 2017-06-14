@@ -1,18 +1,44 @@
 package Model;
 import java.util.Date;
 
-public class Location implements java.io.Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="LOCATION")
+public class Location implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-	private int idLocation;
-	private Date dateDebut;
-	private Date dateRetour;
-	private int idClient;
-	private int numeroCopie;
-	private int idFilm;
 	
-	public Location() {
-	}
+	@Id
+    @Column(name="IDLOCATION")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
+	@SequenceGenerator(name="SEQ", sequenceName="SEQ_LOCATION")
+	private int idLocation;
+	
+	@Column(name="DATEDEBUT")
+	private Date dateDebut;
+	
+	@Column(name="DATERETOUR")
+	private Date dateRetour;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="IDCLIENT")
+	private Client client;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="IDEXEMPLAIRE")
+	private Exemplaire exemplaire;
+	
+	
+	public Location() {}
 
 	public int getIdLocation() {
 		return idLocation;
@@ -38,28 +64,20 @@ public class Location implements java.io.Serializable {
 		this.dateRetour = dateRetour;
 	}
 
-	public int getIdClient() {
-		return idClient;
+	public Client getClient() {
+		return client;
 	}
 
-	public void setIdClient(int idClient) {
-		this.idClient = idClient;
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
-	public int getNumeroCopie() {
-		return numeroCopie;
+	public Exemplaire getExemplaire() {
+		return exemplaire;
 	}
 
-	public void setNumeroCopie(int numeroCopie) {
-		this.numeroCopie = numeroCopie;
-	}
-
-	public int getIdFilm() {
-		return idFilm;
-	}
-
-	public void setIdFilm(int idFilm) {
-		this.idFilm = idFilm;
+	public void setExemplaire(Exemplaire exemplaire) {
+		this.exemplaire = exemplaire;
 	}
 
 }

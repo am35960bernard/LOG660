@@ -14,5 +14,15 @@
   <mapping class="Model.Forfait"/>
   <mapping class="Model.Utilisateur"/>
   <mapping class="Model.Client"/>
+  <mapping class="Model.Genre"/>
+  <mapping class="Model.Film"/>
+  <mapping class="Model.ActeurFilm"/>
+  <mapping class="Model.Acteur"/>
+  <mapping class="Model.Realisateur"/>
+  <mapping class="Model.Scenariste"/>
+  <mapping class="Model.PersonnageDuCinema"/>
+  <mapping class="Model.Location"/>
+  <mapping class="Model.Exemplaire"/>
+  <mapping class="Model.Pays"/>
  </session-factory>
 </hibernate-configuration>

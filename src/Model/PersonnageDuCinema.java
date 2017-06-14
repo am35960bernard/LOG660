@@ -1,26 +1,45 @@
 package Model;
 import java.util.Date;
 
-public class PersonnageDuCinema implements java.io.Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="PERSONNAGEDUCINEMA")
+@Inheritance(strategy=InheritanceType.JOINED)
+public class PersonnageDuCinema implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+    @Column(name="IDPERSONNAGEDUCINEMA")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
+	@SequenceGenerator(name="SEQ", sequenceName="SEQ_PERSONNAGEDUCINEMA")
 	protected int idPersonneDuCinema;
+	
+	@Column(name="NOMCOMPLET")
 	protected String nomComplet;
+	
+	@Column(name="DATEANNIVERSAIRE")
 	protected Date dateAnniversaire;
+	
+	@Column(name="LIEUNAISSANCE")
 	protected String lieuNaissance;
+	
+	@Column(name="BIOGRAPHIE")
 	protected String biographie;
+	
+	@Column(name="LIENPHOTO")
 	protected String lienPhoto;
 
-	public PersonnageDuCinema(){};	
 	
-	public PersonnageDuCinema(int idPersonneDuCinema,String nomComplet,Date dateAnniversaire,String lieuNaissance,String biographie,String lienPhoto) {
-		this.idPersonneDuCinema = idPersonneDuCinema;
-		this.nomComplet = nomComplet;
-		this.dateAnniversaire = dateAnniversaire;
-		this.lieuNaissance = lieuNaissance;
-		this.biographie = biographie;
-		this.lienPhoto = lienPhoto;
-	}
+	public PersonnageDuCinema(){}
 
 	public int getIdPersonneDuCinema() {
 		return idPersonneDuCinema;

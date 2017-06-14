@@ -1,7 +1,6 @@
 package Services;
 
 import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -13,17 +12,45 @@ public class CourtierBdUtilisateur {
 
 	public String validateAuthentication(String txtCourrielUtilisateur, String txtMotDePasseUtilisateur) {
 		
-		Session sessionAuthentication = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transactionAuthentication = null;
 		
 		String authenticationIdUser = null;
 			
 		try {
 						
-			transactionAuthentication = sessionAuthentication.beginTransaction();
+			transactionAuthentication = session.beginTransaction();
+			
+			/*
+			String hql = "from Film";			
+			Query query = session.createQuery(hql);
+			List<Film> results = query.list();
+			
+			System.out.println(results.size());
+			
+			for (Film film : results) {
+				Random random = new Random();
+				int nbExemplaires = random.ints(1, 101).findFirst().getAsInt();
 				
+				for (int i = 0; i < nbExemplaires; i++) {
+					Exemplaire exemplaire = new Exemplaire();
+			        exemplaire.setFilm(film);
+			        exemplaire.setNumCopie(i + 1);
+			        
+			        session.save(exemplaire);
+			        if ( i % 20 == 0 ) { //20, same as the JDBC batch size
+			            //flush a batch of inserts and release memory:
+			            session.flush();
+			            session.clear();
+			        }
+				}
+			}
+			
+			transactionAuthentication.commit();*/
+			
+			
 			String hql = "from Client where courriel like :utilisateurCourriel and motDePasse like :utilisateurMotDePasse";			
-			Query query = sessionAuthentication.createQuery(hql);
+			Query query = session.createQuery(hql);
 			query.setParameter("utilisateurCourriel", txtCourrielUtilisateur);
 			query.setParameter("utilisateurMotDePasse", txtMotDePasseUtilisateur);
 			List<Client> results = query.list();
@@ -33,12 +60,12 @@ public class CourtierBdUtilisateur {
 	        	results.clear();
 	        }
 
-				
+	        		
 		} catch (HibernateException e) {
 			transactionAuthentication.rollback();
 			e.printStackTrace();
 		} finally {
-			sessionAuthentication.close();
+			session.close();
 		}
 	
 		return authenticationIdUser;

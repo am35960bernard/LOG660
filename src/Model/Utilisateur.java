@@ -5,13 +5,13 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +22,8 @@ public class Utilisateur implements java.io.Serializable {
 	
     @Id
     @Column(name="IDUTILISATEUR")
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
+	@SequenceGenerator(name="SEQ", sequenceName="SEQ_UTILISATEUR")
 	protected int idUtilisateur;
     
     @Column(name="NOM")
@@ -48,16 +49,6 @@ public class Utilisateur implements java.io.Serializable {
 
 	
 	public Utilisateur(){};
-	
-	/*public Utilisateur(String nom,String prenom,String motDePasse,String courriel,String noTelephone,Date dateAnniversaire,int idAdresse) {
-		this.nom = nom;
-		this.prenom = prenom;
-		this.motDePasse = motDePasse;
-		this.courriel = courriel;
-		this.noTelephone = noTelephone;
-		this.dateAnniversaire = dateAnniversaire;
-		this.idAdresse = idAdresse;	
-	}*/
 
 	public int getIdUtilisateur() {
 		return idUtilisateur;
