@@ -9,8 +9,14 @@ public class GestionnaireDeConnexion extends Observable{
 
 	public void connect(String txtCourrielUtilisateur,String txtMotDePasseUtilisateur){
 		
+		String authenticationIdUser;
+		
 		CourtierBdUtilisateur courtierUtilisateur = new CourtierBdUtilisateur();		
-		String authenticationIdUser = courtierUtilisateur.validateAuthentication(txtCourrielUtilisateur,txtMotDePasseUtilisateur);
+		
+		txtCourrielUtilisateur = txtCourrielUtilisateur.replaceAll("\"","").replaceAll("\'","");
+		txtMotDePasseUtilisateur = txtMotDePasseUtilisateur.replaceAll("\"","").replaceAll("\'","");
+		
+		authenticationIdUser = courtierUtilisateur.validateAuthentication(txtCourrielUtilisateur,txtMotDePasseUtilisateur);
 		
 		this.notifyObserver(authenticationIdUser);		
 	}
