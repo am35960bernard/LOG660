@@ -77,7 +77,6 @@ public class LoginWindow extends JFrame implements Observer{
 		messageLabel.setForeground(couleurValiditeConnexion);
 	} 
 
-
 	/**
 	 * Create the login frame.
 	 */
