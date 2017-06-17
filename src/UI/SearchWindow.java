@@ -90,7 +90,7 @@ public class SearchWindow extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{568};
-		gbl_contentPane.rowHeights = new int[]{35, 100, 250};
+		gbl_contentPane.rowHeights = new int[]{35, 105, 250};
 		gbl_contentPane.columnWeights = new double[]{1.0};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 1.0};
 		contentPane.setLayout(gbl_contentPane);
