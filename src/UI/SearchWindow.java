@@ -172,6 +172,9 @@ public class SearchWindow extends JFrame {
 		});
 		addCriteriaPanel.add(addCriteriaButton);
 		
+		JButton searchButton = new JButton("Rechercher");
+		addCriteriaPanel.add(searchButton);
+		
 		JPanel foundMoviesPanel = new JPanel();
 		GridBagConstraints gbc_foundMoviesPanel = new GridBagConstraints();
 		gbc_foundMoviesPanel.fill = GridBagConstraints.BOTH;
@@ -563,6 +566,10 @@ public class SearchWindow extends JFrame {
 				criteriasPanel.revalidate();
 			}
 		});
+		
+		JPanel initialPanel = new TitleCriteriaPanel();
+		setCriteriaPanelSize(criteriaScrollPane, initialPanel);
+		criteriasPanel.add(initialPanel);
 	}
 	
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)
