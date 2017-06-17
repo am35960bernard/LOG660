@@ -1,5 +1,6 @@
 package Services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -23,69 +24,83 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "from Film";
-			if(myCriterias.size() >0)
-				hql += " where ";
+			String hql = "select * from Film";
+			String hqlWhere = " where ";
+			List<String> title = new ArrayList<String>();
+			List<String> actors = new ArrayList<String>();
+
 			for(Parameters element : myCriterias)
 			{
 				switch(element.getName())
 				{
 				case  StaticVariables.ACTEUR_NOM :
-					hql += " inner join ";
+					hql += " inner join Film.ActeurFilm ActeurFilm inner join ActeurFilm.Acteur  Acteur inner join Acteur.PersonnageDuCinema PersonnageDuCinemaas as acteurCinema";
 					if(element.getValues().size() == 1)
-						hql += "ActeurCinema.nomComplet  = :nomActeur" + element.getValues();
+						hqlWhere += " AND nomComplet  = :nomActeur" ;
 					else
-						hql += "ActeurCinema.nomComplet IN(:nomActeur)";
+						hqlWhere += "acteurCinema.nomComplet IN(:nomActeur)";
+					actors = element.getValues();
 				break;
 				
 				case StaticVariables.ANNEE_FILM :
 					if(element.getValues().size() == 1)
-						hql +="anneeSortie = :anneeSortie";
+						hqlWhere +="anneeSortie = :anneeSortie";
 					else
-						hql +="anneeSortie BETWEEN(:min,:max)";
+						hqlWhere +="anneeSortie BETWEEN(:min,:max)";
 				break;
 				
 				case StaticVariables.LANGUE_FILM :
 					if(element.getValues().size() == 1)
-						hql += "langueOriginale  = :langueOriginale" ;
+						hqlWhere += "langueOriginale  = :langueOriginale" ;
 					else
-						hql += "langueOriginale IN(:langueOriginale)";					
+						hqlWhere += "langueOriginale IN(:langueOriginale)";					
 				break;
 				
 				case StaticVariables.NOM_GENRE :
+					hql += " inner join FilmGenre as filmGenre inner join Genre as genre";
 					if(element.getValues().size() == 1)
-						hql += "Genre.nom  = :genreNom" ;
+						hqlWhere += "genre.nom  = :genreNom" ;
 					else
-						hql += "Genre.nom IN(:genreNom)";	
+						hqlWhere += "genre.nom IN(:genreNom)";	
 				break;
 				
 				case StaticVariables.NOM_PAYS :
+					hql += " inner join PaysFilm as paysFilm inner join Pays as pays";
 					if(element.getValues().size() == 1)
-						hql += "Pays.nom  = :paysNom" ;
+						hqlWhere += "pays.nom  = :paysNom" ;
 					else
-						hql += "Pays.nom IN(:paysNom)";
+						hqlWhere += "pays.nom IN(:paysNom)";
 				break;
 				
 				case StaticVariables.REALISATEUR_NOM :
+					hql += " inner join RealisateurFilm as realisateurFilm inner join Realisateur as realisateur inner join PersonnageDuCinema as realisateurCinema";
 					if(element.getValues().size() == 1)
-						hql += "RealisateurCinema.nomComplet  = :nomRealisateur" ;
+						hqlWhere += "realisateurCinema.nomComplet  = :nomRealisateur" ;
 					else
-						hql += "RealisateurCinema.nomComplet IN(:nomRealisateur)";
+						hqlWhere += "realisateurCinema.nomComplet IN(:nomRealisateur)";
 				break;
 				
 				case StaticVariables.TITRE_FILM :
 					if(element.getValues().size() == 1)
-						hql += "titre  = :titre" ;
+						hqlWhere += "titre  = :titre" ;
 					else
-						hql += "titre IN(titre)";
+						hqlWhere += "titre IN(:titre)";
+					title = element.getValues();
 				break;
 				}
 			
 			}
+			String request = hql.concat(hqlWhere);
 		
-			Query query = session.createQuery(hql);
-			List<Film> results = query.list();
+			Query query = session.createQuery(request);
+			query.setParameterList("titre", title);
+			query.setParameterList("nomActeur", actors);
 
+			List<Film> results = query.list();
+			if (results.size() > 0) {
+	        	String langue = results.get(0).getLangueOriginale();
+	        	results.clear();
+	        }
 		}
 		catch(HibernateException e)
 		{

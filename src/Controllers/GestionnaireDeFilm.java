@@ -10,15 +10,29 @@ import Services.Filters.Parameters;
 
 public class GestionnaireDeFilm extends Observable {
 	
-	public void chercher(List<String> txtTitreFilm, List<String> txtActeurFilm, List<String> txtPaysFilm)
+	public void chercher(List<String> titles, List<String> intervals, List<String> pays,List<String> langues, List<String> genres,List<String> realisators,List<String> actors )
 	{
 		FilterCriteria myFilters = new FilterCriteria();
-		if(!txtTitreFilm.isEmpty())
-			myFilters.addCriteria(new Parameters(StaticVariables.TITRE_FILM, txtTitreFilm));
-		if(!txtActeurFilm.isEmpty())
-			myFilters.addCriteria(new Parameters(StaticVariables.ACTEUR_NOM, txtActeurFilm));
-		if(!txtPaysFilm.isEmpty())
-			myFilters.addCriteria(new Parameters(StaticVariables.NOM_PAYS, txtPaysFilm));
+		if(!titles.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.TITRE_FILM, titles));
+		
+		if(!intervals.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.ANNEE_FILM, intervals));
+		
+		if(!pays.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.NOM_PAYS, pays));
+		
+		if(!langues.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.LANGUE_FILM, langues));
+		
+		if(!genres.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.NOM_GENRE, genres));
+		
+		if(!realisators.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.REALISATEUR_NOM, realisators));
+		
+		if(!actors.isEmpty())
+			myFilters.addCriteria(new Parameters(StaticVariables.ACTEUR_NOM, actors));
 		
 		CourtierBdFilm courtierFilm = new CourtierBdFilm();
 		courtierFilm.chercherFilm(myFilters);

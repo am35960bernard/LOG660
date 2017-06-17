@@ -30,14 +30,6 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.JPopupMenu;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 
 public class SearchWindow extends JFrame {
 
@@ -46,6 +38,7 @@ public class SearchWindow extends JFrame {
 	private int CRITERIA_PANELS_MARGIN = 5;
 	
 	private JPanel contentPane;
+	private JPanel criteriasPanel;
 	private JTextField movieTitleTextField;
 	private JTextField releaseYearTextField;
 	private JTextField productionCountryTextField;
@@ -58,12 +51,12 @@ public class SearchWindow extends JFrame {
 	private JTextField crewMemberBirthLocationTextField;
 	private JTextField directorTextField;
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
+	private JButton searchButton;
 
 	/**
 	 * Create the frame.
 	 */
-	public SearchWindow(LoginWindow loginWindow) {
-		setTitle("Web\uFB02ix - Catalogue de films");
+	public SearchWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 600);
 		contentPane = new JPanel();
@@ -76,59 +69,23 @@ public class SearchWindow extends JFrame {
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 1.0};
 		contentPane.setLayout(gbl_contentPane);
 		
-		JPanel topToolbarPanel = new JPanel();
-		GridBagConstraints gbc_topToolbarPanel = new GridBagConstraints();
-		gbc_topToolbarPanel.anchor = GridBagConstraints.NORTH;
-		gbc_topToolbarPanel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_topToolbarPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_topToolbarPanel.gridx = 0;
-		gbc_topToolbarPanel.gridy = 0;
-		contentPane.add(topToolbarPanel, gbc_topToolbarPanel);
-		topToolbarPanel.setLayout(new BorderLayout(0, 0));
-		
 		JPanel addCriteriaPanel = new JPanel();
-		topToolbarPanel.add(addCriteriaPanel, BorderLayout.EAST);
+		GridBagConstraints gbc_addCriteriaPanel = new GridBagConstraints();
+		gbc_addCriteriaPanel.anchor = GridBagConstraints.NORTH;
+		gbc_addCriteriaPanel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_addCriteriaPanel.insets = new Insets(0, 0, 5, 0);
+		gbc_addCriteriaPanel.gridx = 0;
+		gbc_addCriteriaPanel.gridy = 0;
+		contentPane.add(addCriteriaPanel, gbc_addCriteriaPanel);
+		addCriteriaPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JLabel searchCriteriasTitleLabel = new JLabel("Crit\u00E8res de recherche:");
-		addCriteriaPanel.add(searchCriteriasTitleLabel);
-		searchCriteriasTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		searchCriteriasTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JLabel criteriaLabel = new JLabel("Crit\u00E8res de recherche:");
+		criteriaLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		addCriteriaPanel.add(criteriaLabel);
 		
 		JComboBox criteriaComboBox = new JComboBox();
 		criteriaComboBox.setModel(new DefaultComboBoxModel(new String[] {"Titre", "Intervale", "Pays de production", "Langue originale", "Genre", "R\u00E9alisateur", "Acteur"}));
 		addCriteriaPanel.add(criteriaComboBox);
-		
-		JButton addCriteriaButton = new JButton("Ajouter");
-		addCriteriaButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		addCriteriaPanel.add(addCriteriaButton);
-		
-		JButton searchButton = new JButton("Rechercher");
-		searchButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		addCriteriaPanel.add(searchButton);
-		
-		JPanel disconnectPanel = new JPanel();
-		topToolbarPanel.add(disconnectPanel, BorderLayout.WEST);
-		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setFont(new Font("Tahoma", Font.BOLD, 15));
-		disconnectPanel.add(menuBar);
-		
-		JMenu userMenu = new JMenu("Utilisateur");
-		userMenu.setFont(new Font("Tahoma", Font.BOLD, 15));
-		menuBar.add(userMenu);
-		
-		JMenuItem disconnectUserMenuItem = new JMenuItem("D\u00E9connexion");
-		disconnectUserMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		disconnectUserMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (loginWindow != null)
-				{
-					SearchWindow.this.dispose();
-					loginWindow.setVisible(true);		
-				}
-			}
-		});
-		userMenu.add(disconnectUserMenuItem);
 		
 		JScrollPane criteriaScrollPane = new JScrollPane();
 		criteriaScrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -145,9 +102,52 @@ public class SearchWindow extends JFrame {
 		criteriaScrollPane.setViewportView(criteriaScrollPanel);
 		criteriaScrollPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JPanel criteriasPanel = new JPanel();
+	    criteriasPanel = new JPanel();
 		criteriaScrollPanel.add(criteriasPanel);
 		criteriasPanel.setLayout(new BoxLayout(criteriasPanel, BoxLayout.Y_AXIS));
+		
+		JButton addCriteriaButton = new JButton("Ajouter");
+		addCriteriaButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel panel;
+				switch ((String)criteriaComboBox.getSelectedItem())
+				{
+				case "Titre":
+					panel = new TitleCriteriaPanel();
+					break;
+				case "Intervale":
+					panel = new IntervalCriteriaPanel();
+					break;
+				case "Pays de production":
+					panel = new CountryCriteriaPanel();
+					break;
+				case "Langue originale":
+					panel = new LanguageCriteriaPanel();
+					break;
+				case "Genre":
+					panel = new GenreCriteriaPanel();
+					break;
+				case "Réalisateur":
+					panel = new DirectorCriteriaPanel();
+					break;
+				case "Acteur":
+					panel = new ActorCriteriaPanel();
+					break;
+				default:
+					return;
+				}
+				
+				setCriteriaPanelSize(criteriaScrollPane, panel);
+				panel.setAlignmentY(TOP_ALIGNMENT);
+				
+				criteriasPanel.add(panel);
+				criteriasPanel.revalidate();
+			}
+		});
+		addCriteriaPanel.add(addCriteriaButton);
+		
+		searchButton = new JButton("Rechercher");
+		addCriteriaPanel.add(searchButton);
 		
 		JPanel foundMoviesPanel = new JPanel();
 		GridBagConstraints gbc_foundMoviesPanel = new GridBagConstraints();
@@ -177,7 +177,7 @@ public class SearchWindow extends JFrame {
 		gbl_movieDetailsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		movieDetailsPanel.setLayout(gbl_movieDetailsPanel);
 		
-		JLabel lblDtailsDuFilm = new JLabel("D\u00E9tails du film");
+		JLabel lblDtailsDuFilm = new JLabel("D\u00E9tails du film:");
 		lblDtailsDuFilm.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_lblDtailsDuFilm = new GridBagConstraints();
 		gbc_lblDtailsDuFilm.gridwidth = 2;
@@ -351,7 +351,7 @@ public class SearchWindow extends JFrame {
 		gbl_actorDetailsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		actorDetailsPanel.setLayout(gbl_actorDetailsPanel);
 		
-		JLabel crewMemberTitleLabel = new JLabel("D\u00E9tails sur cet \u00E9quipier");
+		JLabel crewMemberTitleLabel = new JLabel("D\u00E9tails sur cet \u00E9quipier:");
 		crewMemberTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_crewMemberTitleLabel = new GridBagConstraints();
 		gbc_crewMemberTitleLabel.gridwidth = 2;
@@ -443,7 +443,7 @@ public class SearchWindow extends JFrame {
 		gbl_directorAndActorsPanel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		directorAndActorsPanel.setLayout(gbl_directorAndActorsPanel);
 		
-		JLabel crewTitleLabel = new JLabel("\u00C9quipe de tournage");
+		JLabel crewTitleLabel = new JLabel("\u00C9quipe de tournage:");
 		crewTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_crewTitleLabel = new GridBagConstraints();
 		gbc_crewTitleLabel.gridwidth = 2;
@@ -500,7 +500,7 @@ public class SearchWindow extends JFrame {
 		gbl_foundMoviesListPanel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		foundMoviesListPanel.setLayout(gbl_foundMoviesListPanel);
 		
-		JLabel lblRsultatDeLa = new JLabel("R\u00E9sultat de la recherche");
+		JLabel lblRsultatDeLa = new JLabel("R\u00E9sultat de la recherche:");
 		lblRsultatDeLa.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRsultatDeLa.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_lblRsultatDeLa = new GridBagConstraints();
@@ -527,7 +527,6 @@ public class SearchWindow extends JFrame {
 		foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		JButton rentMovieButton = new JButton("Louer ce film");
-		rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		rentMovieButton.setEnabled(false);
 		foundMoviesListButtonsPanel.add(rentMovieButton);
 				
@@ -545,43 +544,6 @@ public class SearchWindow extends JFrame {
 		JPanel initialPanel = new TitleCriteriaPanel();
 		setCriteriaPanelSize(criteriaScrollPane, initialPanel);
 		criteriasPanel.add(initialPanel);
-		
-		addCriteriaButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel;
-				switch ((String)criteriaComboBox.getSelectedItem())
-				{
-				case "Titre":
-					panel = new TitleCriteriaPanel();
-					break;
-				case "Intervale":
-					panel = new IntervalCriteriaPanel();
-					break;
-				case "Pays de production":
-					panel = new CountryCriteriaPanel();
-					break;
-				case "Langue originale":
-					panel = new LanguageCriteriaPanel();
-					break;
-				case "Genre":
-					panel = new GenreCriteriaPanel();
-					break;
-				case "Réalisateur":
-					panel = new DirectorCriteriaPanel();
-					break;
-				case "Acteur":
-					panel = new ActorCriteriaPanel();
-					break;
-				default:
-					return;
-				}
-				
-				setCriteriaPanelSize(criteriaScrollPane, panel);
-				
-				criteriasPanel.add(panel);
-				criteriasPanel.revalidate();
-			}
-		});
 	}
 	
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)
@@ -592,21 +554,14 @@ public class SearchWindow extends JFrame {
 		criteriaPanel.setPreferredSize(size);
 	}
 	
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
+	public Component[] getSearchomponents()
+	{
+		return criteriasPanel.getComponents();
+		
+	}
+
+	public void addController (ActionListener controller)
+	{
+		searchButton.addActionListener(controller);
 	}
 }

@@ -1,21 +1,28 @@
 package UI;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JTextField;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
+
 import java.awt.Insets;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class GenreCriteriaPanel extends JPanel implements CriteriaPanel {
 
+	private JComboBox comboBox;
 	/**
 	 * Create the panel.
 	 */
@@ -56,6 +63,11 @@ public class GenreCriteriaPanel extends JPanel implements CriteriaPanel {
 		gbc_btnSupprimer.gridy = 0;
 		add(btnSupprimer, gbc_btnSupprimer);
 
+	}
+	
+	public String getGenre()
+	{
+		return comboBox.getSelectedItem().toString();
 	}
 
 }

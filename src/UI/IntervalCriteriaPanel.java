@@ -1,15 +1,21 @@
 package UI;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JTextField;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
+
 import java.awt.Insets;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
@@ -78,6 +84,16 @@ public class IntervalCriteriaPanel extends JPanel implements CriteriaPanel {
 		gbc_btnSupprimer.gridy = 0;
 		add(btnSupprimer, gbc_btnSupprimer);
 
+	}
+	
+	public String getMin()
+	{
+		return textField.getText();
+	}
+	
+	public String getMax()
+	{
+		return textField_1.getText();
 	}
 
 }

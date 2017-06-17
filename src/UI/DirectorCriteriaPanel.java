@@ -1,15 +1,21 @@
 package UI;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JTextField;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
+
 import java.awt.Insets;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
@@ -61,4 +67,8 @@ public class DirectorCriteriaPanel extends JPanel implements CriteriaPanel {
 
 	}
 
+	public String getRealisator()
+	{
+		return textField.getText();
+	}
 }

@@ -1,16 +1,22 @@
 package UI;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JTextField;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
+
 import java.awt.Insets;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -19,6 +25,8 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 	/**
 	 * Create the panel.
 	 */
+	
+	private JComboBox comboBox;
 	public CountryCriteriaPanel() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
@@ -35,7 +43,7 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 		gbc_lblTitreDuFilm.gridy = 0;
 		add(lblTitreDuFilm, gbc_lblTitreDuFilm);
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -58,4 +66,8 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 
 	}
 
+	public String getCountry()
+	{
+		return comboBox.getSelectedItem().toString();
+	}
 }
