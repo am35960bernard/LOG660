@@ -12,6 +12,7 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 
 public class ActorCriteriaPanel extends JPanel implements CriteriaPanel {
 	private JTextField textField;
@@ -36,6 +37,7 @@ public class ActorCriteriaPanel extends JPanel implements CriteriaPanel {
 		add(lblTitreDuFilm, gbc_lblTitreDuFilm);
 		
 		textField = new JTextField();
+		textField.setPreferredSize(new Dimension(6, 25));
 		GridBagConstraints gbc_textField = new GridBagConstraints();
 		gbc_textField.insets = new Insets(0, 0, 0, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
