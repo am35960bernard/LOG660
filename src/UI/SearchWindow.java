@@ -576,10 +576,7 @@ public class SearchWindow extends JFrame {
 					return;
 				}
 				
-				Dimension size = new Dimension(criteriasPanel.getWidth(), 35);
-				panel.setPreferredSize(size);
-				panel.setMinimumSize(size);
-				panel.setAlignmentY(TOP_ALIGNMENT);
+				setCriteriaPanelSize(criteriaScrollPane, panel);
 				
 				criteriasPanel.add(panel);
 				criteriasPanel.revalidate();
