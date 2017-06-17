@@ -43,15 +43,16 @@ public class LoginWindow extends JFrame implements Observer{
 		if(str == null){
 			couleurValiditeConnexion = new Color(204, 0, 0);
 			messageValiditeConnexion = "Erreur de connexion.";
-			txtCourrielUtilisateur.setText("");
-			txtMotDePasseUtilisateur.setText("");
+			lblValiditeDeConnexion.setText(messageValiditeConnexion);
+			lblValiditeDeConnexion.setForeground(couleurValiditeConnexion);
 		}else if(str != null){
 			couleurValiditeConnexion = new Color(0, 102, 51);
 			messageValiditeConnexion = "Bonjour "+ str + " !";
-		}
-		
-		lblValiditeDeConnexion.setText(messageValiditeConnexion);
-		lblValiditeDeConnexion.setForeground(couleurValiditeConnexion);
+			SearchWindow frame = new SearchWindow();
+			frame.setTitle("LOG660 - Connected As: " + str);
+			frame.setVisible(true);
+			this.dispose();
+		}		
 	} 
 
 

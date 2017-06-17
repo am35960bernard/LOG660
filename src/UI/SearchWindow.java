@@ -3,8 +3,6 @@ package UI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,35 +15,25 @@ import java.awt.Insets;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ScrollPaneConstants;
-import java.awt.GridLayout;
 import javax.swing.BoxLayout;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.ButtonGroup;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
 public class SearchWindow extends JFrame {
 
+	private static final long serialVersionUID = 8598471863495375567L;
 	private int CRITERIA_PANELS_HEIGHT = 30;
 	private int CRITERIA_PANELS_MARGIN = 5;
 	
@@ -62,22 +50,6 @@ public class SearchWindow extends JFrame {
 	private JTextField crewMemberBirthLocationTextField;
 	private JTextField directorTextField;
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SearchWindow frame = new SearchWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.

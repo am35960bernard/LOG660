@@ -18,7 +18,7 @@ public class GestionnaireDeConnexion extends Observable{
 		
 		authenticationIdUser = courtierUtilisateur.validateAuthentication(txtCourrielUtilisateur,txtMotDePasseUtilisateur);
 		
-		this.notifyObserver(authenticationIdUser);		
+		this.notifyObserver(authenticationIdUser);
 	}
 
 }
