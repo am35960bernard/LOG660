@@ -17,37 +17,58 @@ import Controllers.Observer;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Font;
+import javax.swing.JPasswordField;
 
 
 public class LoginWindow extends JFrame implements Observer{
 
+	private static final String DEFAULT_MESSAGE = "Veuillez vous identifier...";
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtCourrielUtilisateur;
-	private JTextField txtMotDePasseUtilisateur;
 	private JButton btnConnexion;
 	private JLabel lblValiditeDeConnexion;
+	private JPasswordField txtMotDePasseUtilisateur;
 
 	public void addController (ActionListener controller){
-		btnConnexion.addActionListener(controller);
+		btnConnexion.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				lblValiditeDeConnexion.setText("Connexion en cours...");
+				lblValiditeDeConnexion.setForeground(Color.BLACK);
+				LoginWindow.this.invalidate();
+				
+				SwingUtilities.invokeLater(new Runnable() {
+				    public void run() {
+				    	controller.actionPerformed(e);
+				    }
+				});
+			}
+		});
 	}	
 	
 	public void update(String str) {
-		Color couleurValiditeConnexion = null;
-		String messageValiditeConnexion = "";
+		Color couleurValiditeConnexion;
+		String messageValiditeConnexion;
 		
 		if(str == null){
-			couleurValiditeConnexion = new Color(204, 0, 0);
-			messageValiditeConnexion = "Erreur de connexion.";
-			txtCourrielUtilisateur.setText("");
-			txtMotDePasseUtilisateur.setText("");
-		}else if(str != null){
-			couleurValiditeConnexion = new Color(0, 102, 51);
-			messageValiditeConnexion = "Bonjour "+ str + " !";
+			couleurValiditeConnexion = Color.RED;
+			messageValiditeConnexion = "Échec de l'authentification, veuillez réessayer...";
+		}else{
+			SearchWindow searchWindow = new SearchWindow(this);
+			this.setVisible(false);
+			couleurValiditeConnexion = Color.BLACK;
+			messageValiditeConnexion = DEFAULT_MESSAGE;
+			searchWindow.setVisible(true);
 		}
 		
 		lblValiditeDeConnexion.setText(messageValiditeConnexion);
@@ -59,8 +80,9 @@ public class LoginWindow extends JFrame implements Observer{
 	 * Create the login frame.
 	 */
 	public LoginWindow() {
+		setTitle("Connexion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 200);
+		setBounds(100, 100, 450, 178);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -71,6 +93,7 @@ public class LoginWindow extends JFrame implements Observer{
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		btnConnexion = new JButton("Connexion");
+		btnConnexion.setFont(new Font("Tahoma", Font.BOLD, 13));
 				
 		panel.add(btnConnexion);
 		
@@ -98,13 +121,12 @@ public class LoginWindow extends JFrame implements Observer{
 		JLabel lblMotDePasse = new JLabel("Mot de passe:");
 		panel_1.add(lblMotDePasse, "2, 4, right, default");
 		
-		txtMotDePasseUtilisateur = new JTextField();
+		txtMotDePasseUtilisateur = new JPasswordField();
 		txtMotDePasseUtilisateur.setText("Thi0ruimie");
-		panel_1.add(txtMotDePasseUtilisateur, "4, 4, fill, default");
-		txtMotDePasseUtilisateur.setColumns(10);
+		panel_1.add(txtMotDePasseUtilisateur, "4, 4");
 		
-		lblValiditeDeConnexion = new JLabel("Connexion");
-		lblValiditeDeConnexion.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblValiditeDeConnexion = new JLabel(DEFAULT_MESSAGE);
+		lblValiditeDeConnexion.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblValiditeDeConnexion.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblValiditeDeConnexion, BorderLayout.NORTH);
 
