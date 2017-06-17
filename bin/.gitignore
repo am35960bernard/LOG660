@@ -1,4 +1,6 @@
 /Controllers/
+/Main/
+/Model/
 /Services/
 /UI/
-/Model/
+/hibernate.cfg.xml
