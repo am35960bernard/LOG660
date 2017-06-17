@@ -57,7 +57,7 @@ public class LoginWindow extends JFrame implements Observer{
 			}
 		});
 	}	
-	
+
 	public void update(String str) {
 		Color couleurValiditeConnexion;
 		String messageValiditeConnexion;

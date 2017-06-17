@@ -94,9 +94,9 @@ public class SearchWindow extends JFrame {
 		searchCriteriasTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		searchCriteriasTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Titre", "Intervale", "Pays de production", "Langue originale", "Genre", "R\u00E9alisateur", "Acteur"}));
-		addCriteriaPanel.add(comboBox);
+		JComboBox criteriaComboBox = new JComboBox();
+		criteriaComboBox.setModel(new DefaultComboBoxModel(new String[] {"Titre", "Intervale", "Pays de production", "Langue originale", "Genre", "R\u00E9alisateur", "Acteur"}));
+		addCriteriaPanel.add(criteriaComboBox);
 		
 		JButton addCriteriaButton = new JButton("Ajouter");
 		addCriteriaButton.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -545,6 +545,46 @@ public class SearchWindow extends JFrame {
 		JPanel initialPanel = new TitleCriteriaPanel();
 		setCriteriaPanelSize(criteriaScrollPane, initialPanel);
 		criteriasPanel.add(initialPanel);
+		
+		addCriteriaButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JPanel panel;
+				switch ((String)criteriaComboBox.getSelectedItem())
+				{
+				case "Titre":
+					panel = new TitleCriteriaPanel();
+					break;
+				case "Intervale":
+					panel = new IntervalCriteriaPanel();
+					break;
+				case "Pays de production":
+					panel = new CountryCriteriaPanel();
+					break;
+				case "Langue originale":
+					panel = new LanguageCriteriaPanel();
+					break;
+				case "Genre":
+					panel = new GenreCriteriaPanel();
+					break;
+				case "Réalisateur":
+					panel = new DirectorCriteriaPanel();
+					break;
+				case "Acteur":
+					panel = new ActorCriteriaPanel();
+					break;
+				default:
+					return;
+				}
+				
+				Dimension size = new Dimension(criteriasPanel.getWidth(), 35);
+				panel.setPreferredSize(size);
+				panel.setMinimumSize(size);
+				panel.setAlignmentY(TOP_ALIGNMENT);
+				
+				criteriasPanel.add(panel);
+				criteriasPanel.revalidate();
+			}
+		});
 	}
 	
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)
