@@ -26,6 +26,8 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Font;
 import javax.swing.JPasswordField;
+import java.awt.Window.Type;
+import java.awt.Dimension;
 
 
 public class LoginWindow extends JFrame implements Observer{
@@ -36,17 +38,17 @@ public class LoginWindow extends JFrame implements Observer{
 	private JPanel contentPane;
 	private JTextField txtCourrielUtilisateur;
 	private JButton btnConnexion;
-	private JLabel lblValiditeDeConnexion;
 	private JPasswordField txtMotDePasseUtilisateur;
+	private JPanel messagePanel;
+	private JLabel messageLabel;
 
 	public void addController (ActionListener controller){
 		btnConnexion.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				lblValiditeDeConnexion.setText("Connexion en cours...");
-				lblValiditeDeConnexion.setForeground(Color.BLACK);
-				LoginWindow.this.invalidate();
-				
+				messageLabel.setText("Connexion en cours...");
+				messageLabel.setForeground(Color.BLACK);
+
 				SwingUtilities.invokeLater(new Runnable() {
 				    public void run() {
 				    	controller.actionPerformed(e);
@@ -71,8 +73,8 @@ public class LoginWindow extends JFrame implements Observer{
 			searchWindow.setVisible(true);
 		}
 		
-		lblValiditeDeConnexion.setText(messageValiditeConnexion);
-		lblValiditeDeConnexion.setForeground(couleurValiditeConnexion);
+		messageLabel.setText(messageValiditeConnexion);
+		messageLabel.setForeground(couleurValiditeConnexion);
 	} 
 
 
@@ -80,26 +82,27 @@ public class LoginWindow extends JFrame implements Observer{
 	 * Create the login frame.
 	 */
 	public LoginWindow() {
-		setTitle("Connexion");
+		setResizable(false);
+		setTitle("Web\uFB02ix - Connexion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 178);
+		setBounds(100, 100, 450, 176);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel buttonsPanel = new JPanel();
+		contentPane.add(buttonsPanel, BorderLayout.SOUTH);
+		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		btnConnexion = new JButton("Connexion");
 		btnConnexion.setFont(new Font("Tahoma", Font.BOLD, 13));
 				
-		panel.add(btnConnexion);
+		buttonsPanel.add(btnConnexion);
 		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
+		JPanel mainPanel = new JPanel();
+		contentPane.add(mainPanel, BorderLayout.CENTER);
+		mainPanel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -111,24 +114,29 @@ public class LoginWindow extends JFrame implements Observer{
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		JLabel lblNomDutilisateur = new JLabel("Adresse courriel:");
-		panel_1.add(lblNomDutilisateur, "2, 2, right, default");
+		mainPanel.add(lblNomDutilisateur, "2, 2, right, default");
 		
 		txtCourrielUtilisateur = new JTextField();
+		txtCourrielUtilisateur.setPreferredSize(new Dimension(6, 25));
 		txtCourrielUtilisateur.setText("WilmaSHuff27@hotmail.com");
-		panel_1.add(txtCourrielUtilisateur, "4, 2, fill, default");
+		mainPanel.add(txtCourrielUtilisateur, "4, 2, fill, default");
 		txtCourrielUtilisateur.setColumns(10);
 		
 		JLabel lblMotDePasse = new JLabel("Mot de passe:");
-		panel_1.add(lblMotDePasse, "2, 4, right, default");
+		mainPanel.add(lblMotDePasse, "2, 4, right, default");
 		
 		txtMotDePasseUtilisateur = new JPasswordField();
+		txtMotDePasseUtilisateur.setPreferredSize(new Dimension(6, 25));
 		txtMotDePasseUtilisateur.setText("Thi0ruimie");
-		panel_1.add(txtMotDePasseUtilisateur, "4, 4");
+		mainPanel.add(txtMotDePasseUtilisateur, "4, 4");
 		
-		lblValiditeDeConnexion = new JLabel(DEFAULT_MESSAGE);
-		lblValiditeDeConnexion.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblValiditeDeConnexion.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblValiditeDeConnexion, BorderLayout.NORTH);
+		messagePanel = new JPanel();
+		contentPane.add(messagePanel, BorderLayout.NORTH);
+		
+		messageLabel = new JLabel("Veuillez vous identifier...");
+		messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		messageLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		messagePanel.add(messageLabel);
 
 	}
 	 

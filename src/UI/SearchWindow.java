@@ -91,6 +91,7 @@ public class SearchWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public SearchWindow(LoginWindow loginWindow) {
+		setTitle("Web\uFB02ix - Catalogue de films");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 600);
 		contentPane = new JPanel();
@@ -137,12 +138,15 @@ public class SearchWindow extends JFrame {
 		topToolbarPanel.add(disconnectPanel, BorderLayout.WEST);
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(new Font("Tahoma", Font.BOLD, 15));
 		disconnectPanel.add(menuBar);
 		
 		JMenu userMenu = new JMenu("Utilisateur");
+		userMenu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		menuBar.add(userMenu);
 		
 		JMenuItem disconnectUserMenuItem = new JMenuItem("D\u00E9connexion");
+		disconnectUserMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		disconnectUserMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (loginWindow != null)
