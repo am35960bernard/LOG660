@@ -41,7 +41,7 @@ public class FilmController implements java.awt.event.ActionListener{
 		List<String> genres = new ArrayList<String>();
 		List<String> realisators = new ArrayList<String>();
 		List<String> actors = new ArrayList<String>();
-		Component[] myComponents = this.view.getSearchomponents();
+		Component[] myComponents = this.view.getSearchComponents();
 		for(Component element : myComponents)
 		{
 			if(element instanceof TitleCriteriaPanel)
