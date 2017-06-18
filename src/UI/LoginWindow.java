@@ -88,8 +88,10 @@ public class LoginWindow extends JFrame implements Observer{
 	 * Create the login frame.
 	 */
 	public LoginWindow() {
+		setResizable(false);
+		setTitle("Webflix - Connexion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 200);
+		setBounds(100, 100, 450, 178);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,6 +102,7 @@ public class LoginWindow extends JFrame implements Observer{
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		btnConnexion = new JButton("Connexion");
+		btnConnexion.setFont(new Font("Tahoma", Font.BOLD, 13));
 				
 		panel.add(btnConnexion);
 		
@@ -137,7 +140,7 @@ public class LoginWindow extends JFrame implements Observer{
 		
 		messageLabel = new JLabel("Veuillez vous identifier...");
 		messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		messageLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		messageLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		messagePanel.add(messageLabel);
 
 	}
