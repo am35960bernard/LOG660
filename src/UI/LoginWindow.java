@@ -123,6 +123,7 @@ public class LoginWindow extends JFrame implements Observer{
 		mainPanel.add(lblNomDutilisateur, "2, 2, right, default");
 		
 		txtCourrielUtilisateur = new JTextField();
+		txtCourrielUtilisateur.setPreferredSize(new Dimension(6, 25));
 		txtCourrielUtilisateur.setText("WilmaSHuff27@hotmail.com");
 		mainPanel.add(txtCourrielUtilisateur, "4, 2, fill, default");
 		txtCourrielUtilisateur.setColumns(10);
