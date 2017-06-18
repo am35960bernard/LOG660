@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,7 +22,7 @@ public class PersonnageDuCinema implements java.io.Serializable {
     @Column(name="IDPERSONNAGEDUCINEMA")
     @GeneratedValue(strategy=GenerationType.AUTO, generator="SEQ")
 	@SequenceGenerator(name="SEQ", sequenceName="SEQ_PERSONNAGEDUCINEMA")
-	protected int idPersonneDuCinema;
+	protected int idPersonnageDuCinema;
 	
 	@Column(name="NOMCOMPLET")
 	protected String nomComplet;
@@ -42,11 +43,11 @@ public class PersonnageDuCinema implements java.io.Serializable {
 	public PersonnageDuCinema(){}
 
 	public int getIdPersonneDuCinema() {
-		return idPersonneDuCinema;
+		return idPersonnageDuCinema;
 	}
 
 	public void setIdPersonneDuCinema(int idPersonneDuCinema) {
-		this.idPersonneDuCinema = idPersonneDuCinema;
+		this.idPersonnageDuCinema = idPersonneDuCinema;
 	}
 
 	public String getNomComplet() {

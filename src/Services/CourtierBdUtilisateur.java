@@ -6,7 +6,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import Model.Acteur;
+import Model.ActeurFilm;
 import Model.Client;
+import Model.Film;
 
 public class CourtierBdUtilisateur {
 
@@ -22,31 +25,18 @@ public class CourtierBdUtilisateur {
 			transactionAuthentication = session.beginTransaction();
 			
 			/*
-			String hql = "from Film";			
+			String hql = "SELECT af.acteur FROM Film f JOIN f.acteurFilms af "
+					+ "WHERE f.idFilm = :id "
+					+ "AND af.film.idFilm = :id";		
+			int id = 1605;
 			Query query = session.createQuery(hql);
-			List<Film> results = query.list();
+			query.setParameter("id", id);
+			List<Acteur> results = query.list();
 			
-			System.out.println(results.size());
-			
-			for (Film film : results) {
-				Random random = new Random();
-				int nbExemplaires = random.ints(1, 101).findFirst().getAsInt();
-				
-				for (int i = 0; i < nbExemplaires; i++) {
-					Exemplaire exemplaire = new Exemplaire();
-			        exemplaire.setFilm(film);
-			        exemplaire.setNumCopie(i + 1);
-			        
-			        session.save(exemplaire);
-			        if ( i % 20 == 0 ) { //20, same as the JDBC batch size
-			            //flush a batch of inserts and release memory:
-			            session.flush();
-			            session.clear();
-			        }
-				}
+			for (Acteur x : results) {
+				System.out.println(x.getNomComplet());
 			}
-			
-			transactionAuthentication.commit();*/
+			*/
 			
 			
 			String hql = "from Client where courriel like :utilisateurCourriel and motDePasse like :utilisateurMotDePasse";			

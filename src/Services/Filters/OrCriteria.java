@@ -32,7 +32,6 @@ public class OrCriteria implements Criteria{
 
 	@Override
 	public void addCriteria(String filter) {
-		// TODO Auto-generated method stub
 		
 	}
 

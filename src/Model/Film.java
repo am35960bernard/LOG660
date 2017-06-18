@@ -46,7 +46,7 @@ public class Film implements java.io.Serializable {
 	@Column(name="LIENPOSTER")
 	private String photo;
 
-	@OneToMany(mappedBy="acteur")
+	@OneToMany(mappedBy="film")
 	private Set<ActeurFilm> acteurFilms = new HashSet<ActeurFilm>(0);
 	
 	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)

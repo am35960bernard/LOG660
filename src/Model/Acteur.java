@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class Acteur extends PersonnageDuCinema implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@OneToMany(mappedBy="film")
+	@OneToMany(mappedBy="acteur")
 	private Set<ActeurFilm> acteurFilms = new HashSet<ActeurFilm>(0);
 	
 	public Acteur(){}

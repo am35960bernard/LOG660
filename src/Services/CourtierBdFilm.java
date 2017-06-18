@@ -3,7 +3,6 @@ package Services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -24,87 +23,93 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "from Film";
-			String hqlWhere = " where ";
+			String hql = "from Film f JOIN f.ActeurFilm af";
+			String hqlWHERE = " WHERE 1 = 1"; // This won't cut it if we use OR statements though.
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
 
 			for(Parameters element : myCriterias)
 			{
+				boolean singleValue = element.getValues().size() == 1;
 				switch(element.getName())
 				{
-				case  StaticVariables.ACTEUR_NOM :
-					hql += " inner join Film.ActeurFilm ActeurFilm inner join ActeurFilm.Acteur  Acteur inner join Acteur.PersonnageDuCinema PersonnageDuCinemaas as acteurCinema";
-					if(element.getValues().size() == 1)
-						hqlWhere += " AND nomComplet  = :nomActeur" ;
-					else
-						hqlWhere += "acteurCinema.nomComplet IN(:nomActeur)";
+
+				case StaticVariables.ACTEUR_NOM :
+					hqlWHERE += singleValue ? 
+							" AND af.acteur.nomComplet = :nomActeur"
+							: 
+								" AND af.acteur.nomComplet IN(:nomActeur)";
+					hqlWHERE += " AND af.film.idFilm = f.idFilm";
 					actors = element.getValues();
-				break;
-				
+					break;
+
 				case StaticVariables.ANNEE_FILM :
-					if(element.getValues().size() == 1)
-						hqlWhere +="anneeSortie = :anneeSortie";
-					else
-						hqlWhere +="anneeSortie BETWEEN(:min,:max)";
-				break;
-				
+					hqlWHERE += singleValue ? 
+							" AND f.anneeSortie = :anneeSortie"
+							:
+								" AND f.anneeSortie BETWEEN(:min, :max)";
+					break;
+
 				case StaticVariables.LANGUE_FILM :
-					if(element.getValues().size() == 1)
-						hqlWhere += "langueOriginale  = :langueOriginale" ;
-					else
-						hqlWhere += "langueOriginale IN(:langueOriginale)";					
-				break;
-				
+					hqlWHERE += singleValue ? 
+							" AND f.langueOriginale = :langueOriginale"
+							:
+								" AND f.langueOriginale IN(:langueOriginale)";					
+					break;
+
 				case StaticVariables.NOM_GENRE :
-					hql += " inner join FilmGenre as filmGenre inner join Genre as genre";
-					if(element.getValues().size() == 1)
-						hqlWhere += "genre.nom  = :genreNom" ;
-					else
-						hqlWhere += "genre.nom IN(:genreNom)";	
-				break;
-				
+					hqlWHERE += singleValue ? 
+							" AND f.genre.nom = :genreNom"
+							:
+								" AND f.genre.nom IN(:genreNom)";	
+					break;
+
 				case StaticVariables.NOM_PAYS :
-					hql += " inner join PaysFilm as paysFilm inner join Pays as pays";
-					if(element.getValues().size() == 1)
-						hqlWhere += "pays.nom  = :paysNom" ;
-					else
-						hqlWhere += "pays.nom IN(:paysNom)";
-				break;
-				
+					hqlWHERE += singleValue ? 
+							" AND pays.nom  = :paysNom"
+							:
+								" AND pays.nom IN(:paysNom)";
+					break;
+
 				case StaticVariables.REALISATEUR_NOM :
-					hql += " inner join RealisateurFilm as realisateurFilm inner join Realisateur as realisateur inner join PersonnageDuCinema as realisateurCinema";
-					if(element.getValues().size() == 1)
-						hqlWhere += "realisateurCinema.nomComplet  = :nomRealisateur" ;
-					else
-						hqlWhere += "realisateurCinema.nomComplet IN(:nomRealisateur)";
-				break;
-				
+					hqlWHERE += singleValue ? 
+							" AND realisateurCinema.nomComplet  = :nomRealisateur"
+							:
+								" AND realisateurCinema.nomComplet IN(:nomRealisateur)";
+					break;
+
 				case StaticVariables.TITRE_FILM :
-					if(element.getValues().size() == 1)
-						hqlWhere += "titre  = :titre" ;
-					else
-						hqlWhere += "titre IN(:titre)";
+					hqlWHERE += singleValue ? 
+							" AND titre = :titre"
+							:
+								" AND titre IN(:titre)";
 					title = element.getValues();
-				break;
+					break;
 				}
-			
+
 			}
-			String request = hql.concat(hqlWhere);
-		
+			String request = hql.concat(hqlWHERE);
+
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
-			//query.setParameterList("nomActeur", actors);
+			query.setParameterList("nomActeur", actors);
 
 			List<Film> results = query.list();
+			for (Film f : results) {
+				System.out.println(f.getTitre());
+			}
 			return results;
-		
+
 		}
 		catch(HibernateException e)
 		{
-			
+
+		}
+		finally 
+		{
+			session.close();
 		}
 		return null;
-		
+
 	}
 }

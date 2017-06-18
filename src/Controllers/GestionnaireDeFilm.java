@@ -1,10 +1,7 @@
 package Controllers;
 
 import java.util.List;
-import java.util.Observable;
-
 import Services.CourtierBdFilm;
-import Services.Filters.Criteria;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
