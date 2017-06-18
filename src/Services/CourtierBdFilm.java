@@ -16,7 +16,7 @@ import Services.Filters.Parameters;
 
 public class CourtierBdFilm {
 
-	public void chercherFilm(FilterCriteria criterias)
+	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transactionFilm = null;
@@ -24,7 +24,7 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "select * from Film";
+			String hql = "from Film";
 			String hqlWhere = " where ";
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
@@ -94,18 +94,17 @@ public class CourtierBdFilm {
 		
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
-			query.setParameterList("nomActeur", actors);
+			//query.setParameterList("nomActeur", actors);
 
 			List<Film> results = query.list();
-			if (results.size() > 0) {
-	        	String langue = results.get(0).getLangueOriginale();
-	        	results.clear();
-	        }
+			return results;
+		
 		}
 		catch(HibernateException e)
 		{
 			
 		}
+		return null;
 		
 	}
 }

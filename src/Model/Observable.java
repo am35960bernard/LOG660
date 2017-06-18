@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Controllers.Observer;
 
@@ -24,5 +25,11 @@ public class Observable {
 			observer.update(stringToNotify);
 		}
 
+	protected void notifyObserver(List<Film> listResult)
+	{
+		for(Observer observer : listObserver)
+			observer.update(listResult);
+		
+	}
 	
 }

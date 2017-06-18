@@ -8,7 +8,7 @@ import Services.Filters.Criteria;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
-public class GestionnaireDeFilm extends Observable {
+public class GestionnaireDeFilm extends Model.Observable {
 	
 	public void chercher(List<String> titles, List<String> intervals, List<String> pays,List<String> langues, List<String> genres,List<String> realisators,List<String> actors )
 	{
@@ -35,7 +35,8 @@ public class GestionnaireDeFilm extends Observable {
 			myFilters.addCriteria(new Parameters(StaticVariables.ACTEUR_NOM, actors));
 		
 		CourtierBdFilm courtierFilm = new CourtierBdFilm();
-		courtierFilm.chercherFilm(myFilters);
+		notifyObserver(courtierFilm.chercherFilm(myFilters));
+		
 	}
 
 }

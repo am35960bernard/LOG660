@@ -18,6 +18,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import Controllers.FilmController;
 import Controllers.GestionnaireDeFilm;
 import Controllers.Observer;
+import Model.Film;
 
 import com.jgoodies.forms.layout.FormSpecs;
 
@@ -33,6 +34,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import java.awt.Font;
+import java.util.List;
 
 
 public class LoginWindow extends JFrame implements Observer{
@@ -73,6 +75,7 @@ public class LoginWindow extends JFrame implements Observer{
 			SearchWindow searchWindow = new SearchWindow(this);
 			FilmController filmController = new FilmController();
 			GestionnaireDeFilm filmModel = new GestionnaireDeFilm();
+			filmModel.addObserver(searchWindow);
 			filmController.addModel(filmModel);
 			filmController.addView(searchWindow);
 			searchWindow.addController(filmController);
@@ -152,6 +155,12 @@ public class LoginWindow extends JFrame implements Observer{
 
 	public JTextField getTxtMotDePasseUtilisateur() {
 		return txtMotDePasseUtilisateur;
+	}
+
+	@Override
+	public void update(List<Film> contentToUpdate) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

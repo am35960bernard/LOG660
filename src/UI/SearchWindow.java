@@ -3,39 +3,57 @@ package UI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import java.awt.GridBagConstraints;
+
 import javax.swing.JScrollPane;
+
 import java.awt.FlowLayout;
 import java.awt.Insets;
+
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+
 import java.awt.Font;
+import java.util.List;
+
 import javax.swing.SwingConstants;
 
-public class SearchWindow extends JFrame {
+import Controllers.Observer;
+import Model.Film;
+import Model.Genre;
+import Model.Pays;
+
+public class SearchWindow extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 8598471863495375567L;
 	private int CRITERIA_PANELS_HEIGHT = 30;
@@ -597,5 +615,39 @@ public class SearchWindow extends JFrame {
 	public void addController (ActionListener controller)
 	{
 		searchButton.addActionListener(controller);
+	}
+
+	@Override
+	public void update(String contentToUpdate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(List<Film> films) {
+		if(films != null)
+		{
+			for(Film element : films)
+			{
+				movieTitleTextField.setText(element.getTitre());
+				releaseYearTextField.setText(String.valueOf(element.getAnneeSortie()));
+				String pays="";
+				
+				for(Pays p : element.getPays())
+					pays += p.getNom() +",";
+				productionCountryTextField.setText(pays);
+				
+				originalLanguageTextField.setText(element.getLangueOriginale());
+				movieLengthTextField.setText(String.valueOf(element.getDuree()));
+				
+				String genre = "";
+				for(Genre g : element.getGenres())
+					genre += g.getNom() +",";
+				movieGenreTextField.setText(genre);
+				
+			//	movieGenreTextField.setText(element.getGenres().);
+			}
+		}
+		
 	}
 }
