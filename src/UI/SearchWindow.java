@@ -30,28 +30,51 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
+
+import com.jgoodies.common.collect.ArrayListModel;
+
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.SwingConstants;
 
 import Controllers.Observer;
+import Model.Acteur;
+import Model.ActeurFilm;
 import Model.Film;
 import Model.Genre;
 import Model.Pays;
+import Model.PersonnageDuCinema;
+import Model.Realisateur;
+import Model.Scenariste;
+
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.ListSelectionModel;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class SearchWindow extends JFrame implements Observer{
 
@@ -71,9 +94,15 @@ public class SearchWindow extends JFrame implements Observer{
 	private JTextField crewMemberNameTextField;
 	private JTextField crewMemberBirthdayTextField;
 	private JTextField crewMemberBirthLocationTextField;
+	private JTextArea crewMemberBiographyTextArea;
 	private JTextField directorTextField;
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
 	private JButton searchButton;
+	private JList<Film> foundMoviesList;
+	private JButton rentMovieButton;
+	private JList<Acteur> actorsList;
+	private JRadioButton directorRadioButton;
+	private JRadioButton actorsRadioButton;
 
 	/**
 	 * Create the frame.
@@ -476,7 +505,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_crewMemberBiographyLabel.gridy = 4;
 		actorDetailsPanel.add(crewMemberBiographyLabel, gbc_crewMemberBiographyLabel);
 		
-		JTextArea crewMemberBiographyTextArea = new JTextArea();
+		crewMemberBiographyTextArea = new JTextArea();
 		crewMemberBiographyTextArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		GridBagConstraints gbc_crewMemberBiographyTextArea = new GridBagConstraints();
 		gbc_crewMemberBiographyTextArea.fill = GridBagConstraints.BOTH;
@@ -503,7 +532,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_crewTitleLabel.gridy = 0;
 		directorAndActorsPanel.add(crewTitleLabel, gbc_crewTitleLabel);
 		
-		JRadioButton directorRadioButton = new JRadioButton("R\u00E9alisateur:");
+		directorRadioButton = new JRadioButton("R\u00E9alisateur:");
 		directorRadioButton.setSelected(true);
 		crewButtonGroup.add(directorRadioButton);
 		GridBagConstraints gbc_directorRadioButton = new GridBagConstraints();
@@ -524,7 +553,7 @@ public class SearchWindow extends JFrame implements Observer{
 		directorAndActorsPanel.add(directorTextField, gbc_directorTextField);
 		directorTextField.setColumns(10);
 		
-		JRadioButton actorsRadioButton = new JRadioButton("Acteurs:");
+		actorsRadioButton = new JRadioButton("Acteurs:");
 		crewButtonGroup.add(actorsRadioButton);
 		GridBagConstraints gbc_actorsRadioButton = new GridBagConstraints();
 		gbc_actorsRadioButton.anchor = GridBagConstraints.NORTHWEST;
@@ -533,8 +562,37 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_actorsRadioButton.gridy = 2;
 		directorAndActorsPanel.add(actorsRadioButton, gbc_actorsRadioButton);
 		
-		JList actorsList = new JList();
+		ItemListener crewMemberTypeListener = new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if (directorRadioButton.isSelected())
+				{
+					actorsList.clearSelection();
+					actorsList.setEnabled(false);
+				}
+				else if (actorsRadioButton.isSelected())
+				{
+					if (actorsList.getModel().getSize() > 0)
+					{
+						actorsList.setSelectedIndex(0);
+					}
+					actorsList.setEnabled(true);
+				}
+				showCrewMemberDetails();
+			}
+		};
+		directorRadioButton.addItemListener(crewMemberTypeListener);
+		actorsRadioButton.addItemListener(crewMemberTypeListener);
+		
+		actorsList = new JList<Acteur>();
+		actorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		actorsList.setEnabled(false);
+		actorsList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				showCrewMemberDetails();
+			}
+		});
 		actorsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		actorsList.setCellRenderer(new ActorListCellRenderer());
 		GridBagConstraints gbc_actorsList = new GridBagConstraints();
 		gbc_actorsList.fill = GridBagConstraints.BOTH;
 		gbc_actorsList.gridx = 1;
@@ -560,8 +618,79 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_lblRsultatDeLa.gridy = 0;
 		foundMoviesListPanel.add(lblRsultatDeLa, gbc_lblRsultatDeLa);
 		
-		JList foundMoviesList = new JList();
+		foundMoviesList = new JList<Film>();
+		foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (foundMoviesList.isSelectionEmpty())
+				{
+					rentMovieButton.setEnabled(false);
+					
+					movieTitleTextField.setText(null);
+					releaseYearTextField.setText(null);
+					productionCountryTextField.setText(null);
+					originalLanguageTextField.setText(null);
+					movieLengthTextField.setText(null);
+					movieGenreTextField.setText(null);
+					movieScenaristTextField.setText(null);
+					directorTextField.setText(null);
+					actorsList.setModel(new DefaultListModel<Acteur>());
+				}
+				else
+				{
+					Film film = foundMoviesList.getSelectedValue();
+
+					movieTitleTextField.setText(film.getTitre());
+					releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
+					String pays="";
+					
+					for(Pays p : film.getPays())
+						pays += p.getNom() +",";
+					productionCountryTextField.setText(pays);
+					
+					originalLanguageTextField.setText(film.getLangueOriginale());
+					movieLengthTextField.setText(String.valueOf(film.getDuree()));
+					
+					String genre = "";
+					String separateurGenre = "";
+					for(Genre g : film.getGenres())
+					{
+						genre += separateurGenre + g.getNom();
+						separateurGenre = ", ";
+					}
+					movieGenreTextField.setText(genre);
+					
+					// Hack because there should be only one director.
+					Realisateur realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
+					
+					String scenaristes = "";
+					String separateurScenaristes = "";
+					for(Scenariste s : film.getScenaristes())
+					{
+						scenaristes += separateurScenaristes + s.getNomScenariste();
+						separateurScenaristes = ", ";
+					}
+					movieScenaristTextField.setText(scenaristes);
+					
+					directorTextField.setText(realisateur.getNomComplet());
+					
+					DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
+					for (ActeurFilm acteurFilm: film.getActeurFilms())
+					{
+						Acteur acteur = acteurFilm.getActeur();
+						model.addElement(acteur);
+					}
+					actorsList.setModel(model);
+					
+					rentMovieButton.setEnabled(true);
+				}
+				
+				directorRadioButton.setSelected(true);
+				showCrewMemberDetails();
+			}
+		});
 		foundMoviesList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		foundMoviesList.setCellRenderer(new FilmListCellRenderer());
 		GridBagConstraints gbc_foundMoviesList = new GridBagConstraints();
 		gbc_foundMoviesList.insets = new Insets(0, 0, 5, 0);
 		gbc_foundMoviesList.fill = GridBagConstraints.BOTH;
@@ -577,7 +706,7 @@ public class SearchWindow extends JFrame implements Observer{
 		foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
 		foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton rentMovieButton = new JButton("Louer ce film");
+		rentMovieButton = new JButton("Louer ce film");
 		rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		rentMovieButton.setEnabled(false);
 		foundMoviesListButtonsPanel.add(rentMovieButton);
@@ -625,29 +754,159 @@ public class SearchWindow extends JFrame implements Observer{
 
 	@Override
 	public void update(List<Film> films) {
+		films = new ArrayList<Film>();
+		
+		{
+			Film film = new Film();
+			
+			Set<Scenariste> scenaristes = new HashSet<Scenariste>();
+			Scenariste scenariste1 = new Scenariste();
+			scenariste1.setNomScenariste("Bart");
+			scenaristes.add(scenariste1);
+			Scenariste scenariste2 = new Scenariste();
+			scenariste2.setNomScenariste("Lisa");
+			scenaristes.add(scenariste2);
+			
+			Set<ActeurFilm> acteursFilms = new HashSet<ActeurFilm>();
+			Acteur acteur1 = new Acteur();
+			acteur1.setNomComplet("Homer");
+			acteur1.setDateAnniversaire(Date.from(Instant.now()));
+			ActeurFilm acteurFilm1 = new ActeurFilm();
+			acteurFilm1.setActeur(acteur1);
+			acteursFilms.add(acteurFilm1);
+			Acteur acteur2 = new Acteur();
+			acteur2.setNomComplet("Marge");
+			acteur2.setDateAnniversaire(Date.from(Instant.now()));
+			ActeurFilm acteurFilm2 = new ActeurFilm();
+			acteurFilm2.setActeur(acteur2);
+			acteursFilms.add(acteurFilm2);
+	
+			Set<Realisateur> realisateurs = new HashSet<Realisateur>();
+			Realisateur realisateur = new Realisateur();
+			realisateur.setNomComplet("Maggie");
+			realisateur.setDateAnniversaire(Date.from(Instant.now()));
+			realisateurs.add(realisateur);
+			
+			film.setTitre("Titanic");
+			film.setAnneeSortie(1234);
+			film.setLangueOriginale("Espagnol");
+			film.setScenaristes(scenaristes);
+			film.setActeurFilms(acteursFilms);
+			film.setRealisateurs(realisateurs);
+			film.setDuree(150);
+			
+			films.add(film);
+		}
+		{
+			Film film = new Film();
+			
+			Set<Scenariste> scenaristes = new HashSet<Scenariste>();
+			Scenariste scenariste1 = new Scenariste();
+			scenariste1.setNomScenariste("Louis-Pierre");
+			scenaristes.add(scenariste1);
+			Scenariste scenariste2 = new Scenariste();
+			scenariste2.setNomScenariste("Bernardo");
+			scenaristes.add(scenariste2);
+			
+			Set<ActeurFilm> acteursFilms = new HashSet<ActeurFilm>();
+			Acteur acteur1 = new Acteur();
+			acteur1.setNomComplet("Mathieu");
+			acteur1.setDateAnniversaire(Date.from(Instant.now()));
+			ActeurFilm acteurFilm1 = new ActeurFilm();
+			acteurFilm1.setActeur(acteur1);
+			acteursFilms.add(acteurFilm1);
+			Acteur acteur2 = new Acteur();
+			acteur2.setNomComplet("Walid");
+			acteur2.setDateAnniversaire(Date.from(Instant.now()));
+			ActeurFilm acteurFilm2 = new ActeurFilm();
+			acteurFilm2.setActeur(acteur2);
+			acteursFilms.add(acteurFilm2);
+	
+			Set<Realisateur> realisateurs = new HashSet<Realisateur>();
+			Realisateur realisateur = new Realisateur();
+			realisateur.setNomComplet("Lévis");
+			realisateur.setDateAnniversaire(Date.from(Instant.now()));
+			realisateurs.add(realisateur);
+			
+			film.setTitre("La Matrice");
+			film.setAnneeSortie(1234);
+			film.setLangueOriginale("Binaire");
+			film.setScenaristes(scenaristes);
+			film.setActeurFilms(acteursFilms);
+			film.setRealisateurs(realisateurs);
+			film.setDuree(120);
+			
+			films.add(film);
+		}
+		
 		if(films != null)
 		{
-			for(Film element : films)
+			DefaultListModel<Film> model = new DefaultListModel<Film>();
+			for (Film film: films)
 			{
-				movieTitleTextField.setText(element.getTitre());
-				releaseYearTextField.setText(String.valueOf(element.getAnneeSortie()));
-				String pays="";
-				
-				for(Pays p : element.getPays())
-					pays += p.getNom() +",";
-				productionCountryTextField.setText(pays);
-				
-				originalLanguageTextField.setText(element.getLangueOriginale());
-				movieLengthTextField.setText(String.valueOf(element.getDuree()));
-				
-				String genre = "";
-				for(Genre g : element.getGenres())
-					genre += g.getNom() +",";
-				movieGenreTextField.setText(genre);
-				
-			//	movieGenreTextField.setText(element.getGenres().);
+				model.addElement(film);
+			}
+			foundMoviesList.setModel(model);
+			
+			if (films.size() > 0)
+			{
+				foundMoviesList.setSelectedIndex(0);
 			}
 		}
 		
+		showCrewMemberDetails();
+	}
+	
+	private void showCrewMemberDetails()
+	{
+		Film film = foundMoviesList.getSelectedValue();
+		
+		PersonnageDuCinema crewMember = null;
+		if (film != null)
+		{
+			if (directorRadioButton.isSelected() && film.getRealisateurs().size() > 0)
+			{
+				// Hack because there should be only one director.
+				crewMember = (Realisateur)film.getRealisateurs().toArray()[0];
+			}
+			else if (actorsRadioButton.isSelected() && !actorsList.isSelectionEmpty())
+			{
+				crewMember = actorsList.getSelectedValue();
+			}
+		}
+		
+		if (crewMember == null)
+		{
+			clearCrewMemberDetails();
+		}
+		else
+		{
+			showCrewMemberDetails(crewMember);
+		}
+	}
+	
+	private void showCrewMemberDetails(PersonnageDuCinema crewMember)
+	{
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		crewMemberNameTextField.setText(crewMember.getNomComplet());
+		if (crewMember.getDateAnniversaire() == null)
+		{
+			crewMemberBirthdayTextField.setText(null);
+		}
+		else
+		{
+			crewMemberBirthdayTextField.setText(formatter.format(crewMember.getDateAnniversaire()));
+		}
+		crewMemberBirthLocationTextField.setText(crewMember.getLieuNaissance());
+		crewMemberBiographyTextArea.setText(crewMember.getBiographie());
+	}
+	
+	private void clearCrewMemberDetails()
+	{
+		crewMemberNameTextField.setText(null);
+		crewMemberBirthdayTextField.setText(null);
+		crewMemberBirthLocationTextField.setText(null);
+		crewMemberBiographyTextArea.setText(null);
 	}
 }
