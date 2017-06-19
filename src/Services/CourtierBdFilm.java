@@ -1,7 +1,11 @@
 package Services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -9,21 +13,30 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import Controllers.StaticVariables;
+import Model.Exemplaire;
 import Model.Film;
+import Model.Forfait;
+import Model.Location;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
 public class CourtierBdFilm {
 
+	private Session session;
+	
+	public CourtierBdFilm()
+	{
+	 session = HibernateUtil.getSessionFactory().openSession();
+	}
 	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		
 		Transaction transactionFilm = null;
 		try
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "from Film f JOIN f.ActeurFilm af";
+			String hql = "from Film f";
 			String hqlWHERE = " WHERE 1 = 1"; // This won't cut it if we use OR statements though.
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
@@ -92,7 +105,7 @@ public class CourtierBdFilm {
 
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
-			query.setParameterList("nomActeur", actors);
+			//query.setParameterList("nomActeur", actors);
 
 			List<Film> results = query.list();
 			for (Film f : results) {
@@ -111,5 +124,23 @@ public class CourtierBdFilm {
 		}
 		return null;
 
+	}
+	
+	public void insertFilm(Film film)
+	{
+		Forfait forfait = StaticVariables.client.getForfait();
+		Exemplaire exemplaire = (Exemplaire) film.getExemplaires();
+		Query query = session.createQuery("insert into Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire");
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.DATE, forfait.getDureeMaxJours());
+		query.setParameter("dateDebut", now);
+		query.setParameter("dateRetour", c.getTime());
+		query.setParameter("idClient", StaticVariables.client.getIdUtilisateur());
+		query.setParameter("idExemplaire", exemplaire.getIdExemplaire());
+		int result = query.executeUpdate();
+
+		
 	}
 }

@@ -1,5 +1,7 @@
 package Controllers;
 
+import Model.Client;
+
 public final class StaticVariables {
 
 	public final static String TITRE_FILM = "titre";
@@ -9,4 +11,6 @@ public final class StaticVariables {
 	public final static String NOM_GENRE = "Genre.nom";
 	public final static String REALISATEUR_NOM = "Realisateur.nomComplet";
     public final static String ACTEUR_NOM = "Acteur.nomComplet";
+    
+    public static Client client = null;
 }
