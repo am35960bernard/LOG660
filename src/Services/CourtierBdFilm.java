@@ -126,7 +126,7 @@ public class CourtierBdFilm {
 		}
 		finally 
 		{
-			session.close();
+			//session.close();
 		}
 		return null;
 
