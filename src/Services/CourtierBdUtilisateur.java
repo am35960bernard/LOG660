@@ -1,11 +1,13 @@
 package Services;
 
 import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import Controllers.StaticVariables;
 import Model.Acteur;
 import Model.ActeurFilm;
 import Model.Client;
@@ -46,6 +48,7 @@ public class CourtierBdUtilisateur {
 			List<Client> results = query.list();
 			
 	        if (results.size() > 0) {
+	        	StaticVariables.client = results.get(0);
 	        	authenticationIdUser = results.get(0).getPrenom();
 	        	results.clear();
 	        }

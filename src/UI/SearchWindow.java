@@ -74,6 +74,7 @@ public class SearchWindow extends JFrame implements Observer{
 	private JTextField directorTextField;
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
 	private JButton searchButton;
+	private JButton rentMovieButton;
 
 	/**
 	 * Create the frame.
@@ -577,9 +578,9 @@ public class SearchWindow extends JFrame implements Observer{
 		foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
 		foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton rentMovieButton = new JButton("Louer ce film");
+	    rentMovieButton = new JButton("Louer ce film");
 		rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		rentMovieButton.setEnabled(false);
+		rentMovieButton.setEnabled(true);
 		foundMoviesListButtonsPanel.add(rentMovieButton);
 				
 		contentPane.addComponentListener(new ComponentAdapter() {
@@ -615,6 +616,8 @@ public class SearchWindow extends JFrame implements Observer{
 	public void addController (ActionListener controller)
 	{
 		searchButton.addActionListener(controller);
+		rentMovieButton.addActionListener(controller);
+		
 	}
 
 	@Override
