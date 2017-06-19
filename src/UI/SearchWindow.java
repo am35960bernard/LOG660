@@ -758,7 +758,7 @@ public class SearchWindow extends JFrame implements Observer{
 	public void update(List<Film> films) {
 		
 		// Remove this line when queries work...
-		films = createTestMovies();
+		if (films == null) films = createTestMovies();
 		
 		if(films != null)
 		{
