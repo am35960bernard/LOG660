@@ -23,8 +23,8 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "from Film f JOIN f.ActeurFilm af";
-			String hqlWHERE = " WHERE 1 = 1"; // This won't cut it if we use OR statements though.
+			String hql = "FROM Film f JOIN f.ActeurFilm af JOIN af.acteur a";
+			String hqlWHERE = " WHERE 1 = 1"; // This wouldn't cut it if we used OR statements though.
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
 
@@ -35,12 +35,16 @@ public class CourtierBdFilm {
 				{
 
 				case StaticVariables.ACTEUR_NOM :
-					hqlWHERE += singleValue ? 
-							" AND af.acteur.nomComplet = :nomActeur"
-							: 
-								" AND af.acteur.nomComplet IN(:nomActeur)";
-					hqlWHERE += " AND af.film.idFilm = f.idFilm";
 					actors = element.getValues();
+					hqlWHERE += singleValue ?
+							" AND af.acteur.nomComplet = :nomActeur"
+							+ " AND af.film.idFilm = f.idFilm"
+							:
+								" AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
+								+ " WHERE af.acteur.nomComplet IN (:nomActeur)"
+								+ " GROUP BY af.film.titre"
+								+ " HAVING COUNT(*) >= :nbActeurs)";
+
 					break;
 
 				case StaticVariables.ANNEE_FILM :
@@ -92,6 +96,7 @@ public class CourtierBdFilm {
 
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
+			query.setParameter("nbActeurs", actors.size());
 			query.setParameterList("nomActeur", actors);
 
 			List<Film> results = query.list();
