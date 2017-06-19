@@ -36,13 +36,8 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-<<<<<<< HEAD
 			String hql = "FROM Film f JOIN f.ActeurFilm af JOIN af.acteur a";
 			String hqlWHERE = " WHERE 1 = 1"; // This wouldn't cut it if we used OR statements though.
-=======
-			String hql = "from Film f";
-			String hqlWHERE = " WHERE 1 = 1"; // This won't cut it if we use OR statements though.
->>>>>>> 577668a196e5e61f9b00acdd45680d0a957a9994
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
 
@@ -114,12 +109,9 @@ public class CourtierBdFilm {
 
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
-<<<<<<< HEAD
 			query.setParameter("nbActeurs", actors.size());
 			query.setParameterList("nomActeur", actors);
-=======
 			//query.setParameterList("nomActeur", actors);
->>>>>>> 577668a196e5e61f9b00acdd45680d0a957a9994
 
 			List<Film> results = query.list();
 			for (Film f : results) {
