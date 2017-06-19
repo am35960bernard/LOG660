@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JTextField;
 
+import Model.Film;
 import UI.ActorCriteriaPanel;
 import UI.CountryCriteriaPanel;
 import UI.DirectorCriteriaPanel;
@@ -34,48 +35,58 @@ public class FilmController implements java.awt.event.ActionListener{
 	} 
 	public void actionPerformed(java.awt.event.ActionEvent e){
 		
-		List<String> titles = new ArrayList<String>();
-		List<String> intervals = new ArrayList<String>();
-		List<String> pays = new ArrayList<String>();
-		List<String> langues = new ArrayList<String>();
-		List<String> genres = new ArrayList<String>();
-		List<String> realisators = new ArrayList<String>();
-		List<String> actors = new ArrayList<String>();
-		Component[] myComponents = this.view.getSearchComponents();
-		for(Component element : myComponents)
+		switch(e.getActionCommand())
 		{
-			if(element instanceof TitleCriteriaPanel)
+		case "Louer ce film" :
+			Film f ;
+			break;
+			
+		case "Rechercher":
+			List<String> titles = new ArrayList<String>();
+			List<String> intervals = new ArrayList<String>();
+			List<String> pays = new ArrayList<String>();
+			List<String> langues = new ArrayList<String>();
+			List<String> genres = new ArrayList<String>();
+			List<String> realisators = new ArrayList<String>();
+			List<String> actors = new ArrayList<String>();
+			Component[] myComponents = this.view.getSearchComponents();
+			for(Component element : myComponents)
 			{
-				titles.add(((TitleCriteriaPanel) element).getTitle());
-			}
-			else if(element instanceof IntervalCriteriaPanel)
-			{
-				intervals.add(((IntervalCriteriaPanel) element).getMin());
-				intervals.add(((IntervalCriteriaPanel) element).getMax());
-			}
-			else if(element instanceof CountryCriteriaPanel)
-			{
-				pays.add(((CountryCriteriaPanel) element).getCountry());
-			}
-			else if(element instanceof LanguageCriteriaPanel)
-			{
-				langues.add(((LanguageCriteriaPanel) element).getLangue());
-			}
-			else if(element instanceof GenreCriteriaPanel)
-			{
-				genres.add(((GenreCriteriaPanel) element).getGenre());
+				if(element instanceof TitleCriteriaPanel)
+				{
+					titles.add(((TitleCriteriaPanel) element).getTitle());
+				}
+				else if(element instanceof IntervalCriteriaPanel)
+				{
+					intervals.add(((IntervalCriteriaPanel) element).getMin());
+					intervals.add(((IntervalCriteriaPanel) element).getMax());
+				}
+				else if(element instanceof CountryCriteriaPanel)
+				{
+					pays.add(((CountryCriteriaPanel) element).getCountry());
+				}
+				else if(element instanceof LanguageCriteriaPanel)
+				{
+					langues.add(((LanguageCriteriaPanel) element).getLangue());
+				}
+				else if(element instanceof GenreCriteriaPanel)
+				{
+					genres.add(((GenreCriteriaPanel) element).getGenre());
+				}
+				
+				else if(element instanceof DirectorCriteriaPanel)
+				{
+					realisators.add(((DirectorCriteriaPanel) element).getRealisator());
+				}
+				else if(element instanceof ActorCriteriaPanel)
+				{
+					actors.add(((ActorCriteriaPanel) element).getActor());
+				}
 			}
 			
-			else if(element instanceof DirectorCriteriaPanel)
-			{
-				realisators.add(((DirectorCriteriaPanel) element).getRealisator());
-			}
-			else if(element instanceof ActorCriteriaPanel)
-			{
-				actors.add(((ActorCriteriaPanel) element).getActor());
-			}
+			model.chercher(titles, intervals, pays, langues, genres, realisators, actors);
+			break;
 		}
 		
-		model.chercher(titles, intervals, pays, langues, genres, realisators, actors);
 	} 
 }

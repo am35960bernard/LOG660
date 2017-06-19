@@ -1,7 +1,11 @@
 package Services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -9,22 +13,31 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import Controllers.StaticVariables;
+import Model.Exemplaire;
 import Model.Film;
+import Model.Forfait;
+import Model.Location;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
 public class CourtierBdFilm {
 
+	private Session session;
+	
+	public CourtierBdFilm()
+	{
+	 session = HibernateUtil.getSessionFactory().openSession();
+	}
 	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		
 		Transaction transactionFilm = null;
 		try
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "from Film f JOIN f.ActeurFilm af";
-			String hqlWHERE = " WHERE 1 = 1"; // This won't cut it if we use OR statements though.
+			String hql = "FROM Film f JOIN f.ActeurFilm af JOIN af.acteur a";
+			String hqlWHERE = " WHERE 1 = 1"; // This wouldn't cut it if we used OR statements though.
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
 
@@ -35,12 +48,16 @@ public class CourtierBdFilm {
 				{
 
 				case StaticVariables.ACTEUR_NOM :
-					hqlWHERE += singleValue ? 
-							" AND af.acteur.nomComplet = :nomActeur"
-							: 
-								" AND af.acteur.nomComplet IN(:nomActeur)";
-					hqlWHERE += " AND af.film.idFilm = f.idFilm";
 					actors = element.getValues();
+					hqlWHERE += singleValue ?
+							" AND af.acteur.nomComplet = :nomActeur"
+							+ " AND af.film.idFilm = f.idFilm"
+							:
+								" AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
+								+ " WHERE af.acteur.nomComplet IN (:nomActeur)"
+								+ " GROUP BY af.film.titre"
+								+ " HAVING COUNT(*) >= :nbActeurs)";
+
 					break;
 
 				case StaticVariables.ANNEE_FILM :
@@ -92,7 +109,9 @@ public class CourtierBdFilm {
 
 			Query query = session.createQuery(request);
 			query.setParameterList("titre", title);
+			query.setParameter("nbActeurs", actors.size());
 			query.setParameterList("nomActeur", actors);
+			//query.setParameterList("nomActeur", actors);
 
 			List<Film> results = query.list();
 			for (Film f : results) {
@@ -107,9 +126,27 @@ public class CourtierBdFilm {
 		}
 		finally 
 		{
-			session.close();
+			//session.close();
 		}
 		return null;
 
+	}
+	
+	public void insertFilm(Film film)
+	{
+		Forfait forfait = StaticVariables.client.getForfait();
+		Exemplaire exemplaire = (Exemplaire) film.getExemplaires();
+		Query query = session.createQuery("insert into Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire");
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.DATE, forfait.getDureeMaxJours());
+		query.setParameter("dateDebut", now);
+		query.setParameter("dateRetour", c.getTime());
+		query.setParameter("idClient", StaticVariables.client.getIdUtilisateur());
+		query.setParameter("idExemplaire", exemplaire.getIdExemplaire());
+		int result = query.executeUpdate();
+
+		
 	}
 }

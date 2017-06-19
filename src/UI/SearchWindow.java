@@ -99,10 +99,10 @@ public class SearchWindow extends JFrame implements Observer{
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
 	private JButton searchButton;
 	private JList<Film> foundMoviesList;
-	private JButton rentMovieButton;
 	private JList<Acteur> actorsList;
 	private JRadioButton directorRadioButton;
 	private JRadioButton actorsRadioButton;
+	private JButton rentMovieButton;
 
 	/**
 	 * Create the frame.
@@ -744,6 +744,8 @@ public class SearchWindow extends JFrame implements Observer{
 	public void addController (ActionListener controller)
 	{
 		searchButton.addActionListener(controller);
+		rentMovieButton.addActionListener(controller);
+		
 	}
 
 	@Override
@@ -754,8 +756,84 @@ public class SearchWindow extends JFrame implements Observer{
 
 	@Override
 	public void update(List<Film> films) {
-		films = new ArrayList<Film>();
 		
+		// Remove this line when queries work...
+		films = createTestMovies();
+		
+		if(films != null)
+		{
+			DefaultListModel<Film> model = new DefaultListModel<Film>();
+			for (Film film: films)
+			{
+				model.addElement(film);
+			}
+			foundMoviesList.setModel(model);
+			
+			if (films.size() > 0)
+			{
+				foundMoviesList.setSelectedIndex(0);
+			}
+		}
+		
+		showCrewMemberDetails();
+	}
+	
+	private void showCrewMemberDetails()
+	{
+		Film film = foundMoviesList.getSelectedValue();
+		
+		PersonnageDuCinema crewMember = null;
+		if (film != null)
+		{
+			if (directorRadioButton.isSelected() && film.getRealisateurs().size() > 0)
+			{
+				// Hack because there should be only one director.
+				crewMember = (Realisateur)film.getRealisateurs().toArray()[0];
+			}
+			else if (actorsRadioButton.isSelected() && !actorsList.isSelectionEmpty())
+			{
+				crewMember = actorsList.getSelectedValue();
+			}
+		}
+		
+		if (crewMember == null)
+		{
+			clearCrewMemberDetails();
+		}
+		else
+		{
+			showCrewMemberDetails(crewMember);
+		}
+	}
+	
+	private void showCrewMemberDetails(PersonnageDuCinema crewMember)
+	{
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		crewMemberNameTextField.setText(crewMember.getNomComplet());
+		if (crewMember.getDateAnniversaire() == null)
+		{
+			crewMemberBirthdayTextField.setText(null);
+		}
+		else
+		{
+			crewMemberBirthdayTextField.setText(formatter.format(crewMember.getDateAnniversaire()));
+		}
+		crewMemberBirthLocationTextField.setText(crewMember.getLieuNaissance());
+		crewMemberBiographyTextArea.setText(crewMember.getBiographie());
+	}
+	
+	private void clearCrewMemberDetails()
+	{
+		crewMemberNameTextField.setText(null);
+		crewMemberBirthdayTextField.setText(null);
+		crewMemberBirthLocationTextField.setText(null);
+		crewMemberBiographyTextArea.setText(null);
+	}
+	
+	private List<Film> createTestMovies()
+	{
+		List<Film> films = new ArrayList<Film>();
 		{
 			Film film = new Film();
 			
@@ -839,74 +917,6 @@ public class SearchWindow extends JFrame implements Observer{
 			films.add(film);
 		}
 		
-		if(films != null)
-		{
-			DefaultListModel<Film> model = new DefaultListModel<Film>();
-			for (Film film: films)
-			{
-				model.addElement(film);
-			}
-			foundMoviesList.setModel(model);
-			
-			if (films.size() > 0)
-			{
-				foundMoviesList.setSelectedIndex(0);
-			}
-		}
-		
-		showCrewMemberDetails();
-	}
-	
-	private void showCrewMemberDetails()
-	{
-		Film film = foundMoviesList.getSelectedValue();
-		
-		PersonnageDuCinema crewMember = null;
-		if (film != null)
-		{
-			if (directorRadioButton.isSelected() && film.getRealisateurs().size() > 0)
-			{
-				// Hack because there should be only one director.
-				crewMember = (Realisateur)film.getRealisateurs().toArray()[0];
-			}
-			else if (actorsRadioButton.isSelected() && !actorsList.isSelectionEmpty())
-			{
-				crewMember = actorsList.getSelectedValue();
-			}
-		}
-		
-		if (crewMember == null)
-		{
-			clearCrewMemberDetails();
-		}
-		else
-		{
-			showCrewMemberDetails(crewMember);
-		}
-	}
-	
-	private void showCrewMemberDetails(PersonnageDuCinema crewMember)
-	{
-		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-		
-		crewMemberNameTextField.setText(crewMember.getNomComplet());
-		if (crewMember.getDateAnniversaire() == null)
-		{
-			crewMemberBirthdayTextField.setText(null);
-		}
-		else
-		{
-			crewMemberBirthdayTextField.setText(formatter.format(crewMember.getDateAnniversaire()));
-		}
-		crewMemberBirthLocationTextField.setText(crewMember.getLieuNaissance());
-		crewMemberBiographyTextArea.setText(crewMember.getBiographie());
-	}
-	
-	private void clearCrewMemberDetails()
-	{
-		crewMemberNameTextField.setText(null);
-		crewMemberBirthdayTextField.setText(null);
-		crewMemberBirthLocationTextField.setText(null);
-		crewMemberBiographyTextArea.setText(null);
+		return films;
 	}
 }
