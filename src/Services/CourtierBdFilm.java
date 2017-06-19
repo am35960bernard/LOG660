@@ -55,10 +55,10 @@ public class CourtierBdFilm {
 				case StaticVariables.ACTEUR_NOM :
 					hasActeurCriteria = true;
 					actors = element.getValues();
-					hqlWHERE += singleValue ?
+					hqlWHERE += /*singleValue ?
 							" AND af.acteur.nomComplet = :nomActeur"
 							+ " AND af.film.idFilm = f.idFilm"
-							:
+							:*/
 								" AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
 								+ " WHERE af.acteur.nomComplet IN (:nomActeur)"
 								+ " GROUP BY af.film.titre"
@@ -127,7 +127,7 @@ public class CourtierBdFilm {
 				else
 					query.setParameter("titre", title.get(0));
 			if (hasActeurCriteria) {
-				query.setParameter("nbActeurs", actors.size());
+				query.setInteger("nbActeurs", actors.size());
 				query.setParameterList("nomActeur", actors);
 			}
 
