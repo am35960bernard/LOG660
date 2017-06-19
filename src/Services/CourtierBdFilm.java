@@ -1,5 +1,6 @@
 package Services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,11 @@ public class CourtierBdFilm {
 			boolean hasTitreCriteria = false;
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
+			List<String> annee = new ArrayList<String>();
+			List<String> langues = new ArrayList<String>();
+			List<String> genres = new ArrayList<String>();
+			List<String> pays = new ArrayList<String>();
+			List<String> realisateurs = new ArrayList<String>();
 
 			for(Parameters element : myCriterias)
 			{
@@ -55,38 +61,34 @@ public class CourtierBdFilm {
 				case StaticVariables.ACTEUR_NOM :
 					hasActeurCriteria = true;
 					actors = element.getValues();
-					hqlWHERE += /*singleValue ?
-							" AND af.acteur.nomComplet = :nomActeur"
-							+ " AND af.film.idFilm = f.idFilm"
-							:*/
-								" AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
-								+ " WHERE af.acteur.nomComplet IN (:nomActeur)"
+					hqlWHERE += " AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
+								+ " WHERE af.acteur.nomComplet IN (:acteurs)"
 								+ " GROUP BY af.film.titre"
 								+ " HAVING COUNT(*) >= :nbActeurs)";
 					break;
 
 				case StaticVariables.ANNEE_FILM :
 					hasAnneeCriteria = true;
+					annee = element.getValues();
 					hqlWHERE += singleValue ? 
-							" AND f.anneeSortie = :anneeSortie"
+							" AND f.anneeSortie = :annee"
 							:
-								" AND f.anneeSortie BETWEEN(:min, :max)";
+								" AND f.anneeSortie BETWEEN :min AND :max";
 					break;
 
 				case StaticVariables.LANGUE_FILM :
 					hasLangueCriteria = true;
-					hqlWHERE += singleValue ? 
-							" AND f.langueOriginale = :langueOriginale"
-							:
-								" AND f.langueOriginale IN(:langueOriginale)";					
+					langues = element.getValues();
+					hqlWHERE += " AND f.langueOriginale IN (:langues)";				
 					break;
 
 				case StaticVariables.NOM_GENRE :
 					hasGenreCriteria = true;
-					hqlWHERE += singleValue ? 
-							" AND f.genre.nom = :genreNom"
-							:
-								" AND f.genre.nom IN(:genreNom)";	
+					genres = element.getValues();
+					hqlWHERE += " AND f.titre IN (SELECT af.film.titre FROM FilmGenre fg"
+								+ " WHERE fg.genre.nom IN (:genres)"
+								+ " GROUP BY af.film.titre"
+								+ " HAVING COUNT(*) >= :nbGenres)";
 					break;
 
 				case StaticVariables.NOM_PAYS :
@@ -116,28 +118,51 @@ public class CourtierBdFilm {
 				}
 
 			}
+			
 			String request = hql.concat(hqlWHERE);
 			
-			System.out.println(request);
+			System.out.println("QUERY: " + request);
 			Query query = session.createQuery(request);
-			System.out.println("QUERY STARTED !");
-			if (hasTitreCriteria) 
-				if (title.size() > 1) 
+			
+			if (hasTitreCriteria) {
+				if (title.size() > 1)
 					query.setParameterList("titre", title);
 				else
 					query.setParameter("titre", title.get(0));
+			}
 			if (hasActeurCriteria) {
 				query.setInteger("nbActeurs", actors.size());
-				query.setParameterList("nomActeur", actors);
+				query.setParameterList("acteurs", actors);
 			}
-
-			System.out.println("GET DATA !");
+			if (hasAnneeCriteria) {
+				if (annee.size() > 1) {
+					query.setInteger("min", Integer.parseInt(annee.get(0)));
+					query.setInteger("max", Integer.parseInt(annee.get(1)));
+				} else {
+					query.setInteger("annee", Integer.parseInt(annee.get(0)));
+				}
+			}
+			if (hasLangueCriteria) {
+				query.setInteger("nbLangues", langues.size());
+				query.setParameterList("langues", langues);
+			}
+			if (hasGenreCriteria) {
+				query.setInteger("nbGenres", genres.size());
+				query.setParameterList("genres", genres);
+			}
+			if (hasPaysCriteria) {
+				query.setInteger("nbPays", pays.size());
+				query.setParameterList("pays", pays);
+			}
+			if (hasRealisateurCriteria) {
+				query.setInteger("nbRealisateurs", realisateurs.size());
+				query.setParameterList("realisateurs", realisateurs);
+			}
+			
 			List<Film> results = query.list();
 			for (Film f : results) {
 				System.out.println(f.getTitre());
 			}
-			
-			System.out.println("QUERY DONE !");
 			
 			if (!transactionFilm.wasCommitted())
 				transactionFilm.commit();
