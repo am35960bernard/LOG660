@@ -3,6 +3,8 @@ package Services;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,7 +31,7 @@ public class CourtierBdUtilisateur {
 			/*
 			String hql = "SELECT af.acteur FROM Film f JOIN f.acteurFilms af "
 					+ "WHERE f.idFilm = :id "
-					+ "AND af.film.idFilm = :id";		
+					+ "AND af.film.idFilm = :id";
 			int id = 1605;
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
@@ -58,6 +60,9 @@ public class CourtierBdUtilisateur {
 			transactionAuthentication.rollback();
 			e.printStackTrace();
 		} finally {
+			if (!transactionAuthentication.wasCommitted())
+				transactionAuthentication.commit();
+			session.flush();
 			session.close();
 		}
 	

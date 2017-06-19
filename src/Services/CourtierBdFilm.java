@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.print.attribute.standard.DateTimeAtCompleted;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -16,7 +14,6 @@ import Controllers.StaticVariables;
 import Model.Exemplaire;
 import Model.Film;
 import Model.Forfait;
-import Model.Location;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
@@ -26,28 +23,37 @@ public class CourtierBdFilm {
 	
 	public CourtierBdFilm()
 	{
-	 session = HibernateUtil.getSessionFactory().openSession();
+		session = HibernateUtil.getSessionFactory().openSession();
 	}
+	
 	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
-		
 		Transaction transactionFilm = null;
 		try
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "FROM Film f JOIN f.ActeurFilm af JOIN af.acteur a";
+			String hql = "SELECT DISTINCT f FROM Film f JOIN f.acteurFilms af";
 			String hqlWHERE = " WHERE 1 = 1"; // This wouldn't cut it if we used OR statements though.
+			boolean hasActeurCriteria = false;
+			boolean hasAnneeCriteria = false;
+			boolean hasLangueCriteria = false;
+			boolean hasGenreCriteria = false;
+			boolean hasPaysCriteria = false;
+			boolean hasRealisateurCriteria = false;
+			boolean hasTitreCriteria = false;
 			List<String> title = new ArrayList<String>();
 			List<String> actors = new ArrayList<String>();
 
 			for(Parameters element : myCriterias)
 			{
 				boolean singleValue = element.getValues().size() == 1;
+				
 				switch(element.getName())
 				{
 
 				case StaticVariables.ACTEUR_NOM :
+					hasActeurCriteria = true;
 					actors = element.getValues();
 					hqlWHERE += singleValue ?
 							" AND af.acteur.nomComplet = :nomActeur"
@@ -57,10 +63,10 @@ public class CourtierBdFilm {
 								+ " WHERE af.acteur.nomComplet IN (:nomActeur)"
 								+ " GROUP BY af.film.titre"
 								+ " HAVING COUNT(*) >= :nbActeurs)";
-
 					break;
 
 				case StaticVariables.ANNEE_FILM :
+					hasAnneeCriteria = true;
 					hqlWHERE += singleValue ? 
 							" AND f.anneeSortie = :anneeSortie"
 							:
@@ -68,6 +74,7 @@ public class CourtierBdFilm {
 					break;
 
 				case StaticVariables.LANGUE_FILM :
+					hasLangueCriteria = true;
 					hqlWHERE += singleValue ? 
 							" AND f.langueOriginale = :langueOriginale"
 							:
@@ -75,6 +82,7 @@ public class CourtierBdFilm {
 					break;
 
 				case StaticVariables.NOM_GENRE :
+					hasGenreCriteria = true;
 					hqlWHERE += singleValue ? 
 							" AND f.genre.nom = :genreNom"
 							:
@@ -82,51 +90,68 @@ public class CourtierBdFilm {
 					break;
 
 				case StaticVariables.NOM_PAYS :
+					hasPaysCriteria = true;
 					hqlWHERE += singleValue ? 
-							" AND pays.nom  = :paysNom"
+							" AND pays.nom = :paysNom"
 							:
 								" AND pays.nom IN(:paysNom)";
 					break;
 
 				case StaticVariables.REALISATEUR_NOM :
+					hasRealisateurCriteria = true;
 					hqlWHERE += singleValue ? 
-							" AND realisateurCinema.nomComplet  = :nomRealisateur"
+							" AND realisateurCinema.nomComplet = :nomRealisateur"
 							:
 								" AND realisateurCinema.nomComplet IN(:nomRealisateur)";
 					break;
 
 				case StaticVariables.TITRE_FILM :
+					hasTitreCriteria = true;
 					hqlWHERE += singleValue ? 
-							" AND titre = :titre"
+							" AND f.titre = :titre"
 							:
-								" AND titre IN(:titre)";
+								" AND f.titre IN(:titre)";
 					title = element.getValues();
 					break;
 				}
 
 			}
 			String request = hql.concat(hqlWHERE);
-
+			
+			System.out.println(request);
 			Query query = session.createQuery(request);
-			query.setParameterList("titre", title);
-			query.setParameter("nbActeurs", actors.size());
-			query.setParameterList("nomActeur", actors);
-			//query.setParameterList("nomActeur", actors);
+			System.out.println("QUERY STARTED !");
+			if (hasTitreCriteria) 
+				if (title.size() > 1) 
+					query.setParameterList("titre", title);
+				else
+					query.setParameter("titre", title.get(0));
+			if (hasActeurCriteria) {
+				query.setParameter("nbActeurs", actors.size());
+				query.setParameterList("nomActeur", actors);
+			}
 
+			System.out.println("GET DATA !");
 			List<Film> results = query.list();
 			for (Film f : results) {
 				System.out.println(f.getTitre());
 			}
+			
+			System.out.println("QUERY DONE !");
+			
+			if (!transactionFilm.wasCommitted())
+				transactionFilm.commit();
+			
 			return results;
 
 		}
 		catch(HibernateException e)
 		{
-
+			transactionFilm.rollback();
 		}
 		finally 
 		{
-			//session.close();
+			session.flush();
 		}
 		return null;
 

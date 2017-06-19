@@ -18,6 +18,7 @@ public class GestionnaireDeFilm extends Model.Observable {
 	public void chercher(List<String> titles, List<String> intervals, List<String> pays,List<String> langues, List<String> genres,List<String> realisators,List<String> actors )
 	{
 		FilterCriteria myFilters = new FilterCriteria();
+		
 		if(!titles.isEmpty())
 			myFilters.addCriteria(new Parameters(StaticVariables.TITRE_FILM, titles));
 		
