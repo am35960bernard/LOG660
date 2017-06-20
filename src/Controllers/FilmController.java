@@ -19,16 +19,12 @@ import UI.SearchWindow;
 import UI.TitleCriteriaPanel;
 
 public class FilmController implements java.awt.event.ActionListener{
-
-
 	GestionnaireDeFilm model;
 	SearchWindow view;	
-	
 	
 	public void addModel(GestionnaireDeFilm model){
 		this.model = model;
 	} 
-
 
 	public void addView(SearchWindow view){
 		this.view = view;

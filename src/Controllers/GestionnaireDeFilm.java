@@ -2,6 +2,8 @@ package Controllers;
 
 import java.util.List;
 
+import org.hibernate.JDBCException;
+
 import Model.Film;
 import Services.CourtierBdFilm;
 import Services.Filters.FilterCriteria;
@@ -46,7 +48,12 @@ public class GestionnaireDeFilm extends Model.Observable {
 	
 	public Boolean location(Film film)
 	{
-		courtierBdFilm.locationFilm(film);
+		try {
+			courtierBdFilm.locationFilm(film);
+			notifyObserver("La location de " + film.getTitre() + " a réussie!");
+		} catch (Throwable e) {
+			notifyObserver("La location de " + film.getTitre() + " a échouée! (" + e.getMessage() + ")" );
+		}
 		return true;
 	}
 

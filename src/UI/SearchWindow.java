@@ -14,6 +14,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 
@@ -405,6 +406,8 @@ public class SearchWindow extends JFrame implements Observer{
 		movieDetailsPanel.add(movieSummaryLabel, gbc_movieSummaryLabel);
 
 		movieSummaryTextArea = new JTextArea();
+		movieSummaryTextArea.setWrapStyleWord(true);
+		movieSummaryTextArea.setLineWrap(true);
 		movieSummaryTextArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		GridBagConstraints gbc_movieSummaryTextArea = new GridBagConstraints();
 		gbc_movieSummaryTextArea.fill = GridBagConstraints.BOTH;
@@ -503,6 +506,8 @@ public class SearchWindow extends JFrame implements Observer{
 		actorDetailsPanel.add(crewMemberBiographyLabel, gbc_crewMemberBiographyLabel);
 
 		crewMemberBiographyTextArea = new JTextArea();
+		crewMemberBiographyTextArea.setWrapStyleWord(true);
+		crewMemberBiographyTextArea.setLineWrap(true);
 		crewMemberBiographyTextArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		GridBagConstraints gbc_crewMemberBiographyTextArea = new GridBagConstraints();
 		gbc_crewMemberBiographyTextArea.fill = GridBagConstraints.BOTH;
@@ -674,7 +679,11 @@ public class SearchWindow extends JFrame implements Observer{
 									movieGenreTextField.setText(genre);
 				
 									// Hack because there should be only one director.
-									Realisateur realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
+									Realisateur realisateur = null;
+									if (film.getRealisateurs().size() > 0)
+									{
+										realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
+									}
 				
 									String scenaristes = "";
 									String separateurScenaristes = "";
@@ -685,7 +694,14 @@ public class SearchWindow extends JFrame implements Observer{
 									}
 									movieScenaristTextField.setText(scenaristes);
 									
-									directorTextField.setText(realisateur.getNomComplet());
+									if (realisateur == null)
+									{
+										directorTextField.setText(null);										
+									}
+									else
+									{
+										directorTextField.setText(realisateur.getNomComplet());										
+									}
 									movieSummaryTextArea.setText(film.getResume());
 									DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
 									for (ActeurFilm acteurFilm: film.getActeurFilms())
@@ -753,27 +769,19 @@ public class SearchWindow extends JFrame implements Observer{
 		return foundMoviesList.getSelectedValue();
 	}
 	
-	
-
 	public void addController (ActionListener controller)
 	{
 		searchButton.addActionListener(controller);
 		rentMovieButton.addActionListener(controller);
-
 	}
 
 	@Override
-	public void update(String contentToUpdate) {
-		// TODO Auto-generated method stub
-
+	public void update(String message) {
+		JOptionPane.showMessageDialog(null, message);
 	}
 
 	@Override
 	public void update(List<Film> films) {
-
-		// Remove this line when queries work...
-		//if (films == null) films = createTestMovies();
-
 		if (films != null)
 		{
 			DefaultListModel<Film> model = new DefaultListModel<Film>();
@@ -843,95 +851,6 @@ public class SearchWindow extends JFrame implements Observer{
 		crewMemberBirthdayTextField.setText(null);
 		crewMemberBirthLocationTextField.setText(null);
 		crewMemberBiographyTextArea.setText(null);
-	}
-
-	private List<Film> createTestMovies()
-	{
-		List<Film> films = new ArrayList<Film>();
-		{
-			Film film = new Film();
-
-			Set<Scenariste> scenaristes = new HashSet<Scenariste>();
-			Scenariste scenariste1 = new Scenariste();
-			scenariste1.setNomScenariste("Bart");
-			scenaristes.add(scenariste1);
-			Scenariste scenariste2 = new Scenariste();
-			scenariste2.setNomScenariste("Lisa");
-			scenaristes.add(scenariste2);
-
-			Set<ActeurFilm> acteursFilms = new HashSet<ActeurFilm>();
-			Acteur acteur1 = new Acteur();
-			acteur1.setNomComplet("Homer");
-			acteur1.setDateAnniversaire(Date.from(Instant.now()));
-			ActeurFilm acteurFilm1 = new ActeurFilm();
-			acteurFilm1.setActeur(acteur1);
-			acteursFilms.add(acteurFilm1);
-			Acteur acteur2 = new Acteur();
-			acteur2.setNomComplet("Marge");
-			acteur2.setDateAnniversaire(Date.from(Instant.now()));
-			ActeurFilm acteurFilm2 = new ActeurFilm();
-			acteurFilm2.setActeur(acteur2);
-			acteursFilms.add(acteurFilm2);
-
-			Set<Realisateur> realisateurs = new HashSet<Realisateur>();
-			Realisateur realisateur = new Realisateur();
-			realisateur.setNomComplet("Maggie");
-			realisateur.setDateAnniversaire(Date.from(Instant.now()));
-			realisateurs.add(realisateur);
-
-			film.setTitre("Titanic");
-			film.setAnneeSortie(1234);
-			film.setLangueOriginale("Espagnol");
-			film.setScenaristes(scenaristes);
-			film.setActeurFilms(acteursFilms);
-			film.setRealisateurs(realisateurs);
-			film.setDuree(150);
-
-			films.add(film);
-		}
-		{
-			Film film = new Film();
-
-			Set<Scenariste> scenaristes = new HashSet<Scenariste>();
-			Scenariste scenariste1 = new Scenariste();
-			scenariste1.setNomScenariste("Louis-Pierre");
-			scenaristes.add(scenariste1);
-			Scenariste scenariste2 = new Scenariste();
-			scenariste2.setNomScenariste("Bernardo");
-			scenaristes.add(scenariste2);
-
-			Set<ActeurFilm> acteursFilms = new HashSet<ActeurFilm>();
-			Acteur acteur1 = new Acteur();
-			acteur1.setNomComplet("Mathieu");
-			acteur1.setDateAnniversaire(Date.from(Instant.now()));
-			ActeurFilm acteurFilm1 = new ActeurFilm();
-			acteurFilm1.setActeur(acteur1);
-			acteursFilms.add(acteurFilm1);
-			Acteur acteur2 = new Acteur();
-			acteur2.setNomComplet("Walid");
-			acteur2.setDateAnniversaire(Date.from(Instant.now()));
-			ActeurFilm acteurFilm2 = new ActeurFilm();
-			acteurFilm2.setActeur(acteur2);
-			acteursFilms.add(acteurFilm2);
-
-			Set<Realisateur> realisateurs = new HashSet<Realisateur>();
-			Realisateur realisateur = new Realisateur();
-			realisateur.setNomComplet("Lévis");
-			realisateur.setDateAnniversaire(Date.from(Instant.now()));
-			realisateurs.add(realisateur);
-
-			film.setTitre("La Matrice");
-			film.setAnneeSortie(1234);
-			film.setLangueOriginale("Binaire");
-			film.setScenaristes(scenaristes);
-			film.setActeurFilms(acteursFilms);
-			film.setRealisateurs(realisateurs);
-			film.setDuree(120);
-
-			films.add(film);
-		}
-
-		return films;
 	}
 
 	@Override

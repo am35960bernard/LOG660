@@ -2,21 +2,27 @@ package Services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 import Controllers.StaticVariables;
 import Model.Exemplaire;
 import Model.Film;
 import Model.Forfait;
 import Model.Genre;
+import Model.Location;
 import Model.Pays;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
@@ -278,80 +284,40 @@ public class CourtierBdFilm {
 		//	int result = query.executeUpdate();	
 	}*/
 	
-	public  void locationFilm(Film film)
+	public void locationFilm(Film film) throws Throwable
 	{
-		Transaction transaction = null;
+		Transaction transaction = session.beginTransaction();
 		try
 		{
-			transaction = session.beginTransaction();
-			String hql_ExemplairesDisponibles = "";
-			hql_ExemplairesDisponibles += "SELECT idExemplaire ";
-			hql_ExemplairesDisponibles += "FROM Exemplaire ";
-			hql_ExemplairesDisponibles += "WHERE idfilm = :idDuFilm ";
-			hql_ExemplairesDisponibles += "AND estLoue LIKE 'F' ";
-			
-			Query query_ExemplairesDisponibles = session.createQuery(hql_ExemplairesDisponibles);
-			query_ExemplairesDisponibles.setInteger("idDuFilm", film.getIdFilm());			
-			List<Integer> exemplairesDisponibles = query_ExemplairesDisponibles.list();
-			if (!transaction.wasCommitted())
-				transaction.commit();
-			int idExemplaire = exemplairesDisponibles.get(0);
-			
-			
-	        if ( exemplairesDisponibles.size() > 0) {
-			
-	        	transaction = session.beginTransaction();
-	        	
-	        	String hql_UpdateLocation = "";
-	        	hql_UpdateLocation += "UPDATE Exemplaire ";
-	        	hql_UpdateLocation += "SET estLoue = 'T' ";
-	        	hql_UpdateLocation += "WHERE idExemplaire = :idDuExemplaire ";
-
-				Query query_UpdateLocation = session.createQuery(hql_UpdateLocation);
-				query_UpdateLocation.setInteger("idDuExemplaire", idExemplaire);	
-				int resultUpdateLocation = query_UpdateLocation.executeUpdate();	        	
-				if (!transaction.wasCommitted())
-					transaction.commit();
-				
-				transaction = session.beginTransaction();
-	        	String hql_InsertLocation = "";
-	        	hql_InsertLocation += "INSERT INTO Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire)";
-	        	
-	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	        	
-				Date now = new Date();
-				
-				Calendar c = Calendar.getInstance();
-				c.setTime(now);
-				c.add(Calendar.DATE, StaticVariables.client.getForfait().getDureeMaxJours());	 
-			    String newFormat = sdf.format(c.getTime());
-			
-			
-			 
-	        	Query query_InsertLocation = session.createQuery(hql_InsertLocation);
-	        	query_InsertLocation.setDate("dateDebut", now);
-	        	query_InsertLocation.setDate("dateRetour", now);
-	        	query_InsertLocation.setInteger("idClient", StaticVariables.client.getIdUtilisateur());
-	        	query_InsertLocation.setInteger("idExemplaire", idExemplaire);
-	        	
-				
-				int resultInsertLocation = query_InsertLocation.executeUpdate();
-
-				if (!transaction.wasCommitted())
-					transaction.commit();
-				
-	        }
-		
-			
+			for(Exemplaire exemplaire : film.getExemplaires())
+			{
+				if (!exemplaire.isEstLoue())
+				{
+					exemplaire.setEstLoue(true);
+					
+					Location location = new Location();
+					location.setClient(StaticVariables.client);
+					location.setDateDebut(Date.from(Instant.now()));
+					location.setExemplaire(exemplaire);
+					
+					session.update(exemplaire);
+					session.save(location);
+					
+					if (!transaction.wasCommitted()) 
+						transaction.commit();
+					
+					break;
+				}
+			}
 		}
-		catch(HibernateException e)
+		catch(JDBCException e)
 		{
-			System.out.println(e);
+			transaction.rollback();
+			throw e.getCause();
 		}
 		finally
 		{
 			session.flush();
 		}
-		
 	}
 }
