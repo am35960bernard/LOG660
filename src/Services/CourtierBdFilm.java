@@ -307,18 +307,20 @@ public class CourtierBdFilm {
 					if (!transaction.wasCommitted()) 
 						transaction.commit();
 					
-					break;
+					return;
 				}
 			}
+			
+			throw new Exception("Il n'y a plus d'exemplaire disponible de ce film.");
 		}
 		catch(JDBCException e)
 		{
 			transaction.rollback();
-			throw e.getCause();
+			throw new Exception("Le nombre maximal de locations pour votre forfait a été atteint.");
 		}
 		finally
 		{
-			session.flush();
+			//session.flush();
 		}
 	}
 }

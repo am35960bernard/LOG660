@@ -55,7 +55,7 @@ public class Film implements java.io.Serializable {
 	@OneToMany(mappedBy="film")
 	private Set<RealisateurFilm> realisateurFilms = new HashSet<RealisateurFilm>(0);
 	
-	@OneToMany(mappedBy="pays")
+	@OneToMany(mappedBy="film")
 	private Set<PaysFilm> paysFilms = new HashSet<PaysFilm>(0);
 	
 	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
