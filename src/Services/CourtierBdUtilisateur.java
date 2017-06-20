@@ -27,20 +27,21 @@ public class CourtierBdUtilisateur {
 		try {
 						
 			transactionAuthentication = session.beginTransaction();
-			
+
 			/*
-			String hql = "SELECT af.acteur FROM Film f JOIN f.acteurFilms af "
-					+ "WHERE f.idFilm = :id "
-					+ "AND af.film.idFilm = :id";
+			String hql = "SELECT f.titre FROM Film f JOIN f.acteurFilms af WHERE"
+					+ " f.titre IN (SELECT fg.film.titre FROM FilmGenre fg"
+					+ " WHERE fg.genre.nom IN ('Action')"
+					+ " GROUP BY fg.film.titre"
+					+ " HAVING COUNT(*) >= 1)";
 			int id = 1605;
 			Query query = session.createQuery(hql);
-			query.setParameter("id", id);
-			List<Acteur> results = query.list();
+			List<Film> results = query.list();
+
+			for (Film x : results) {
+				System.out.println(x.getTitre());
+			}*/
 			
-			for (Acteur x : results) {
-				System.out.println(x.getNomComplet());
-			}
-			*/
 			
 			
 			String hql = "from Client where courriel like :utilisateurCourriel and motDePasse like :utilisateurMotDePasse";			
