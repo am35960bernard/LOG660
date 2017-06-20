@@ -38,7 +38,8 @@ public class FilmController implements java.awt.event.ActionListener{
 		switch(e.getActionCommand())
 		{
 		case "Louer ce film" :
-			Film f ;
+			Film film = this.view.getSelectedMovie();
+			model.location(film);
 			break;
 			
 		case "Rechercher":

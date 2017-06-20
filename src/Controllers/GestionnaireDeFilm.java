@@ -46,7 +46,7 @@ public class GestionnaireDeFilm extends Model.Observable {
 	
 	public Boolean location(Film film)
 	{
-		
+		courtierBdFilm.locationFilm(film);
 		return true;
 	}
 

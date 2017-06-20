@@ -622,6 +622,7 @@ public class SearchWindow extends JFrame implements Observer{
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (foundMoviesList.isSelectionEmpty())
 				{
+
 					rentMovieButton.setEnabled(false);
 
 					movieTitleTextField.setText(null);
@@ -637,8 +638,9 @@ public class SearchWindow extends JFrame implements Observer{
 				}
 				else
 				{
+				
 					Film film = foundMoviesList.getSelectedValue();
-
+					
 					movieTitleTextField.setText(film.getTitre());
 					releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
 					String pays="";
@@ -739,6 +741,13 @@ public class SearchWindow extends JFrame implements Observer{
 		return criteriasPanel.getComponents();
 
 	}
+	
+	public Film getSelectedMovie()
+	{
+		return foundMoviesList.getSelectedValue();
+	}
+	
+	
 
 	public void addController (ActionListener controller)
 	{
@@ -917,5 +926,11 @@ public class SearchWindow extends JFrame implements Observer{
 		}
 
 		return films;
+	}
+
+	@Override
+	public void update(Film contentToUpdate) {
+		// TODO Auto-generated method stub
+		
 	}
 }

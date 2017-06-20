@@ -163,4 +163,10 @@ public class LoginWindow extends JFrame implements Observer{
 		
 	}
 
+	@Override
+	public void update(Film contentToUpdate) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

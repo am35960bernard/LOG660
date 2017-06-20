@@ -32,4 +32,11 @@ public class Observable {
 		
 	}
 	
+	protected void notifyObserver(Film result)
+	{
+		for(Observer observer : listObserver)
+			observer.update(result);
+		
+	}
+	
 }

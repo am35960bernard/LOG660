@@ -1,5 +1,6 @@
 package Services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -260,21 +261,97 @@ public class CourtierBdFilm {
 
 	}
 	
-	public void insertFilm(Film film)
+	/*public  void locationFilm(Film film)
 	{
-		Forfait forfait = StaticVariables.client.getForfait();
-		Exemplaire exemplaire = (Exemplaire) film.getExemplaires();
-		Query query = session.createQuery("insert into Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire");
-		Date now = new Date();
-		Calendar c = Calendar.getInstance();
-		c.setTime(now);
-		c.add(Calendar.DATE, forfait.getDureeMaxJours());
-		query.setParameter("dateDebut", now);
-		query.setParameter("dateRetour", c.getTime());
-		query.setParameter("idClient", StaticVariables.client.getIdUtilisateur());
-		query.setParameter("idExemplaire", exemplaire.getIdExemplaire());
-		int result = query.executeUpdate();
+			Forfait forfait = StaticVariables.client.getForfait();
+			getTempExemplaire(film.getIdFilm());
+			film.getExemplaires();
+			Query query = session.createQuery("insert into Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire");
+			Date now = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(now);
+			c.add(Calendar.DATE, forfait.getDureeMaxJours());
+			query.setParameter("dateDebut", now);
+			query.setParameter("dateRetour", c.getTime());
+			query.setParameter("idClient", StaticVariables.client.getIdUtilisateur());
+		//	query.setParameter("idExemplaire", exemplaire.getIdExemplaire());
+		//	int result = query.executeUpdate();	
+	}*/
+	
+	public  void locationFilm(Film film)
+	{
+		Transaction transaction = null;
+		try
+		{
+			transaction = session.beginTransaction();
+			String hql_ExemplairesDisponibles = "";
+			hql_ExemplairesDisponibles += "SELECT idExemplaire ";
+			hql_ExemplairesDisponibles += "FROM Exemplaire ";
+			hql_ExemplairesDisponibles += "WHERE idfilm = :idDuFilm ";
+			hql_ExemplairesDisponibles += "AND estLoue LIKE 'F' ";
+			
+			Query query_ExemplairesDisponibles = session.createQuery(hql_ExemplairesDisponibles);
+			query_ExemplairesDisponibles.setInteger("idDuFilm", film.getIdFilm());			
+			List<Integer> exemplairesDisponibles = query_ExemplairesDisponibles.list();
+			if (!transaction.wasCommitted())
+				transaction.commit();
+			int idExemplaire = exemplairesDisponibles.get(0);
+			
+			
+	        if ( exemplairesDisponibles.size() > 0) {
+			
+	        	transaction = session.beginTransaction();
+	        	
+	        	String hql_UpdateLocation = "";
+	        	hql_UpdateLocation += "UPDATE Exemplaire ";
+	        	hql_UpdateLocation += "SET estLoue = 'T' ";
+	        	hql_UpdateLocation += "WHERE idExemplaire = :idDuExemplaire ";
 
+				Query query_UpdateLocation = session.createQuery(hql_UpdateLocation);
+				query_UpdateLocation.setInteger("idDuExemplaire", idExemplaire);	
+				int resultUpdateLocation = query_UpdateLocation.executeUpdate();	        	
+				if (!transaction.wasCommitted())
+					transaction.commit();
+				
+				transaction = session.beginTransaction();
+	        	String hql_InsertLocation = "";
+	        	hql_InsertLocation += "INSERT INTO Location(datedebut,dateretour,idclient,idexemplaire) VALUES(:dateDebut,:dateRetour,:idClient,:idExemplaire)";
+	        	
+	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        	
+				Date now = new Date();
+				
+				Calendar c = Calendar.getInstance();
+				c.setTime(now);
+				c.add(Calendar.DATE, StaticVariables.client.getForfait().getDureeMaxJours());	 
+			    String newFormat = sdf.format(c.getTime());
+			
+			
+			 
+	        	Query query_InsertLocation = session.createQuery(hql_InsertLocation);
+	        	query_InsertLocation.setDate("dateDebut", now);
+	        	query_InsertLocation.setDate("dateRetour", now);
+	        	query_InsertLocation.setInteger("idClient", StaticVariables.client.getIdUtilisateur());
+	        	query_InsertLocation.setInteger("idExemplaire", idExemplaire);
+	        	
+				
+				int resultInsertLocation = query_InsertLocation.executeUpdate();
+
+				if (!transaction.wasCommitted())
+					transaction.commit();
+				
+	        }
+		
+			
+		}
+		catch(HibernateException e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			session.flush();
+		}
 		
 	}
 }
