@@ -14,15 +14,21 @@ import javax.swing.JLabel;
 
 import java.awt.Insets;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import Model.Film;
+import Services.CourtierBdFilm;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class LanguageCriteriaPanel extends JPanel implements CriteriaPanel {
 
 	private JComboBox comboBox;
+	private final static List<String> langueFilm = CourtierBdFilm.getLangues();
 	/**
 	 * Create the panel.
 	 */
@@ -43,7 +49,9 @@ public class LanguageCriteriaPanel extends JPanel implements CriteriaPanel {
 		gbc_lblTitreDuFilm.gridy = 0;
 		add(lblTitreDuFilm, gbc_lblTitreDuFilm);
 		
-		JComboBox comboBox = new JComboBox();
+	    comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(langueFilm.toArray()));
+
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;

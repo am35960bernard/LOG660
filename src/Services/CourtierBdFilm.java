@@ -15,18 +15,96 @@ import Controllers.StaticVariables;
 import Model.Exemplaire;
 import Model.Film;
 import Model.Forfait;
+import Model.Genre;
+import Model.Pays;
 import Services.Filters.FilterCriteria;
 import Services.Filters.Parameters;
 
 public class CourtierBdFilm {
 
-	private Session session;
+	private static Session session;
 	
 	public CourtierBdFilm()
 	{
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
 	
+	
+	public static List<Genre> getGenres()
+	{
+		Transaction transactionGenre = null;
+		try
+		{
+			transactionGenre = session.beginTransaction();
+			String hql = "SELECT idGenre,nom FROM Genre ORDER BY nom ASC ";
+			Query query = session.createQuery(hql);
+			List<Genre> genres = query.list();
+			if (!transactionGenre.wasCommitted())
+				transactionGenre.commit();
+			session.flush();
+			return genres;
+		}
+		catch(HibernateException e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			session.flush();
+		}
+		return null;
+	}
+	
+	
+	public static List<Pays> getPays()
+	{
+		Transaction transactionPays = null;
+		try
+		{
+			transactionPays = session.beginTransaction();
+			String hql = "SELECT idPays,nom  FROM Pays ORDER BY nom ASC ";
+			Query query = session.createQuery(hql);
+			List<Pays> pays = query.list();
+			if (!transactionPays.wasCommitted())
+				transactionPays.commit();
+		
+			return pays;
+		}
+		catch(HibernateException e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			session.flush();
+		}
+		return null;
+	}
+	
+	public static List<String> getLangues()
+	{
+		Transaction transactionLangues = null;
+		try
+		{
+			transactionLangues = session.beginTransaction();
+			String hql = "SELECT DISTINCT langueOriginale  FROM Film Order by langueOriginale ASC ";
+			Query query = session.createQuery(hql);
+			List<String> filmLangue = query.list();
+			if (!transactionLangues.wasCommitted())
+				transactionLangues.commit();
+			
+			return filmLangue;
+		}
+		catch(HibernateException e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			session.flush();
+		}
+		return null;
+	}
 	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
 		Transaction transactionFilm = null;
@@ -61,6 +139,7 @@ public class CourtierBdFilm {
 				case StaticVariables.ACTEUR_NOM :
 					hasActeurCriteria = true;
 					actors = element.getValues();
+
 					hqlWHERE += " AND f.titre IN (SELECT af.film.titre FROM ActeurFilm af"
 								+ " WHERE af.acteur.nomComplet IN (:acteurs)"
 								+ " GROUP BY af.film.titre"
@@ -143,7 +222,6 @@ public class CourtierBdFilm {
 				}
 			}
 			if (hasLangueCriteria) {
-				query.setInteger("nbLangues", langues.size());
 				query.setParameterList("langues", langues);
 			}
 			if (hasGenreCriteria) {

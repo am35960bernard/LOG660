@@ -80,6 +80,7 @@ public class SearchWindow extends JFrame implements Observer{
 
 	private JPanel contentPane;
 	private JPanel criteriasPanel;
+	private JTextArea movieSummaryTextArea;
 	private JTextField movieTitleTextField;
 	private JTextField releaseYearTextField;
 	private JTextField productionCountryTextField;
@@ -403,7 +404,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieSummaryLabel.gridy = 8;
 		movieDetailsPanel.add(movieSummaryLabel, gbc_movieSummaryLabel);
 
-		JTextArea movieSummaryTextArea = new JTextArea();
+		movieSummaryTextArea = new JTextArea();
 		movieSummaryTextArea.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		GridBagConstraints gbc_movieSummaryTextArea = new GridBagConstraints();
 		gbc_movieSummaryTextArea.fill = GridBagConstraints.BOTH;
@@ -616,6 +617,7 @@ public class SearchWindow extends JFrame implements Observer{
 
 		foundMoviesList = new JList<Film>();
 		foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (foundMoviesList.isSelectionEmpty())
@@ -630,6 +632,7 @@ public class SearchWindow extends JFrame implements Observer{
 					movieGenreTextField.setText(null);
 					movieScenaristTextField.setText(null);
 					directorTextField.setText(null);
+					movieSummaryTextArea.setText(null);
 					actorsList.setModel(new DefaultListModel<Acteur>());
 				}
 				else
@@ -667,9 +670,9 @@ public class SearchWindow extends JFrame implements Observer{
 						separateurScenaristes = ", ";
 					}
 					movieScenaristTextField.setText(scenaristes);
-
+					
 					directorTextField.setText(realisateur.getNomComplet());
-
+					movieSummaryTextArea.setText(film.getResume());
 					DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
 					for (ActeurFilm acteurFilm: film.getActeurFilms())
 					{

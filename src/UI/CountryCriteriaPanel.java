@@ -14,11 +14,17 @@ import javax.swing.JLabel;
 
 import java.awt.Insets;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import Model.Pays;
+import Services.CourtierBdFilm;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.util.Optional;
 
 public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 
@@ -27,6 +33,8 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 	 */
 	
 	private JComboBox comboBox;
+	private final static List<Pays> paysList = CourtierBdFilm.getPays();
+	
 	public CountryCriteriaPanel() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
@@ -44,6 +52,13 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 		add(lblTitreDuFilm, gbc_lblTitreDuFilm);
 		
 		comboBox = new JComboBox();
+		   comboBox = new JComboBox();
+		   for(Object element : paysList)
+		   {
+				  Object[] pays = (Object[]) element;
+				  comboBox.addItem(pays[1]);
+
+		   }
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -68,6 +83,13 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 
 	public String getCountry()
 	{
-		return comboBox.getSelectedItem().toString();
+		for(Object element : paysList)
+		   {
+				  Object[] pays = (Object[]) element;
+				  if(pays[1].equals(comboBox.getSelectedItem().toString()))
+				     return String.valueOf(pays[0]);
+
+		   }
+		return "";
 	}
 }
