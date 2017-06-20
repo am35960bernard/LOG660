@@ -524,7 +524,7 @@ public class SearchWindow extends JFrame implements Observer{
 		crewTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_crewTitleLabel = new GridBagConstraints();
 		gbc_crewTitleLabel.gridwidth = 2;
-		gbc_crewTitleLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_crewTitleLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_crewTitleLabel.gridx = 0;
 		gbc_crewTitleLabel.gridy = 0;
 		directorAndActorsPanel.add(crewTitleLabel, gbc_crewTitleLabel);
@@ -579,22 +579,25 @@ public class SearchWindow extends JFrame implements Observer{
 		};
 		directorRadioButton.addItemListener(crewMemberTypeListener);
 		actorsRadioButton.addItemListener(crewMemberTypeListener);
-
-		actorsList = new JList<Acteur>();
-		actorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		actorsList.setEnabled(false);
-		actorsList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				showCrewMemberDetails();
-			}
-		});
+		
+		JScrollPane actorsScrollPane = new JScrollPane();
+		GridBagConstraints gbc_actorsScrollPane = new GridBagConstraints();
+		gbc_actorsScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_actorsScrollPane.gridx = 1;
+		gbc_actorsScrollPane.gridy = 2;
+		directorAndActorsPanel.add(actorsScrollPane, gbc_actorsScrollPane);
+		
+				actorsList = new JList<Acteur>();
+				actorsScrollPane.setViewportView(actorsList);
+				actorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				actorsList.setEnabled(false);
+				actorsList.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						showCrewMemberDetails();
+					}
+				});
 		actorsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		actorsList.setCellRenderer(new ActorListCellRenderer());
-		GridBagConstraints gbc_actorsList = new GridBagConstraints();
-		gbc_actorsList.fill = GridBagConstraints.BOTH;
-		gbc_actorsList.gridx = 1;
-		gbc_actorsList.gridy = 2;
-		directorAndActorsPanel.add(actorsList, gbc_actorsList);
 
 		JPanel foundMoviesListPanel = new JPanel();
 		foundMoviesListPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -614,90 +617,93 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_lblRsultatDeLa.gridx = 0;
 		gbc_lblRsultatDeLa.gridy = 0;
 		foundMoviesListPanel.add(lblRsultatDeLa, gbc_lblRsultatDeLa);
-
-		foundMoviesList = new JList<Film>();
-		foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (foundMoviesList.isSelectionEmpty())
-				{
-
-					rentMovieButton.setEnabled(false);
-
-					movieTitleTextField.setText(null);
-					releaseYearTextField.setText(null);
-					productionCountryTextField.setText(null);
-					originalLanguageTextField.setText(null);
-					movieLengthTextField.setText(null);
-					movieGenreTextField.setText(null);
-					movieScenaristTextField.setText(null);
-					directorTextField.setText(null);
-					movieSummaryTextArea.setText(null);
-					actorsList.setModel(new DefaultListModel<Acteur>());
-				}
-				else
-				{
+		
+		JScrollPane foundMoviesScrollPane = new JScrollPane();
+		GridBagConstraints gbc_foundMoviesScrollPane = new GridBagConstraints();
+		gbc_foundMoviesScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_foundMoviesScrollPane.insets = new Insets(0, 0, 5, 0);
+		gbc_foundMoviesScrollPane.gridx = 0;
+		gbc_foundMoviesScrollPane.gridy = 1;
+		foundMoviesListPanel.add(foundMoviesScrollPane, gbc_foundMoviesScrollPane);
+		
+				foundMoviesList = new JList<Film>();
+				foundMoviesScrollPane.setViewportView(foundMoviesList);
+				foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
-					Film film = foundMoviesList.getSelectedValue();
-					
-					movieTitleTextField.setText(film.getTitre());
-					releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
-					String pays="";
-
-					for(Pays p : film.getPays())
-						pays += p.getNom() +",";
-					productionCountryTextField.setText(pays);
-
-					originalLanguageTextField.setText(film.getLangueOriginale());
-					movieLengthTextField.setText(String.valueOf(film.getDuree()));
-
-					String genre = "";
-					String separateurGenre = "";
-					for(Genre g : film.getGenres())
-					{
-						genre += separateurGenre + g.getNom();
-						separateurGenre = ", ";
-					}
-					movieGenreTextField.setText(genre);
-
-					// Hack because there should be only one director.
-					Realisateur realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
-
-					String scenaristes = "";
-					String separateurScenaristes = "";
-					for(Scenariste s : film.getScenaristes())
-					{
-						scenaristes += separateurScenaristes + s.getNomScenariste();
-						separateurScenaristes = ", ";
-					}
-					movieScenaristTextField.setText(scenaristes);
-					
-					directorTextField.setText(realisateur.getNomComplet());
-					movieSummaryTextArea.setText(film.getResume());
-					DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
-					for (ActeurFilm acteurFilm: film.getActeurFilms())
-					{
-						Acteur acteur = acteurFilm.getActeur();
-						model.addElement(acteur);
-					}
-					actorsList.setModel(model);
-
-					rentMovieButton.setEnabled(true);
-				}
-
-				directorRadioButton.setSelected(true);
-				showCrewMemberDetails();
-			}
-		});
+						foundMoviesList.addListSelectionListener(new ListSelectionListener() {
+							public void valueChanged(ListSelectionEvent arg0) {
+								if (foundMoviesList.isSelectionEmpty())
+								{
+				
+									rentMovieButton.setEnabled(false);
+				
+									movieTitleTextField.setText(null);
+									releaseYearTextField.setText(null);
+									productionCountryTextField.setText(null);
+									originalLanguageTextField.setText(null);
+									movieLengthTextField.setText(null);
+									movieGenreTextField.setText(null);
+									movieScenaristTextField.setText(null);
+									directorTextField.setText(null);
+									movieSummaryTextArea.setText(null);
+									actorsList.setModel(new DefaultListModel<Acteur>());
+								}
+								else
+								{
+								
+									Film film = foundMoviesList.getSelectedValue();
+									
+									movieTitleTextField.setText(film.getTitre());
+									releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
+									String pays="";
+				
+									for(Pays p : film.getPays())
+										pays += p.getNom() +",";
+									productionCountryTextField.setText(pays);
+				
+									originalLanguageTextField.setText(film.getLangueOriginale());
+									movieLengthTextField.setText(String.valueOf(film.getDuree()));
+				
+									String genre = "";
+									String separateurGenre = "";
+									for(Genre g : film.getGenres())
+									{
+										genre += separateurGenre + g.getNom();
+										separateurGenre = ", ";
+									}
+									movieGenreTextField.setText(genre);
+				
+									// Hack because there should be only one director.
+									Realisateur realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
+				
+									String scenaristes = "";
+									String separateurScenaristes = "";
+									for(Scenariste s : film.getScenaristes())
+									{
+										scenaristes += separateurScenaristes + s.getNomScenariste();
+										separateurScenaristes = ", ";
+									}
+									movieScenaristTextField.setText(scenaristes);
+									
+									directorTextField.setText(realisateur.getNomComplet());
+									movieSummaryTextArea.setText(film.getResume());
+									DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
+									for (ActeurFilm acteurFilm: film.getActeurFilms())
+									{
+										Acteur acteur = acteurFilm.getActeur();
+										model.addElement(acteur);
+									}
+									actorsList.setModel(model);
+				
+									rentMovieButton.setEnabled(true);
+								}
+				
+								directorRadioButton.setSelected(true);
+								showCrewMemberDetails();
+							}
+						});
 		foundMoviesList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		foundMoviesList.setCellRenderer(new FilmListCellRenderer());
-		GridBagConstraints gbc_foundMoviesList = new GridBagConstraints();
-		gbc_foundMoviesList.insets = new Insets(0, 0, 5, 0);
-		gbc_foundMoviesList.fill = GridBagConstraints.BOTH;
-		gbc_foundMoviesList.gridx = 0;
-		gbc_foundMoviesList.gridy = 1;
-		foundMoviesListPanel.add(foundMoviesList, gbc_foundMoviesList);
 
 		JPanel foundMoviesListButtonsPanel = new JPanel();
 		GridBagConstraints gbc_foundMoviesListButtonsPanel = new GridBagConstraints();
