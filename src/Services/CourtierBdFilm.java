@@ -1,6 +1,5 @@
 package Services;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import Controllers.StaticVariables;
 import Model.Exemplaire;
 import Model.Film;
-import Model.Forfait;
 import Model.Genre;
 import Model.Location;
 import Model.Pays;
@@ -43,7 +41,7 @@ public class CourtierBdFilm {
 		try
 		{
 			transactionGenre = session.beginTransaction();
-			String hql = "SELECT idGenre,nom FROM Genre ORDER BY nom ASC ";
+			String hql = "SELECT idGenre,nom FROM Genre ORDER BY nom ASC";
 			Query query = session.createQuery(hql);
 			List<Genre> genres = query.list();
 			if (!transactionGenre.wasCommitted())
@@ -69,7 +67,7 @@ public class CourtierBdFilm {
 		try
 		{
 			transactionPays = session.beginTransaction();
-			String hql = "SELECT idPays,nom  FROM Pays ORDER BY nom ASC ";
+			String hql = "SELECT idPays,nom FROM Pays ORDER BY nom ASC";
 			Query query = session.createQuery(hql);
 			List<Pays> pays = query.list();
 			if (!transactionPays.wasCommitted())
@@ -94,7 +92,7 @@ public class CourtierBdFilm {
 		try
 		{
 			transactionLangues = session.beginTransaction();
-			String hql = "SELECT DISTINCT langueOriginale  FROM Film Order by langueOriginale ASC ";
+			String hql = "SELECT DISTINCT langueOriginale FROM Film ORDER BY langueOriginale ASC";
 			Query query = session.createQuery(hql);
 			List<String> filmLangue = query.list();
 			if (!transactionLangues.wasCommitted())
@@ -112,6 +110,7 @@ public class CourtierBdFilm {
 		}
 		return null;
 	}
+	
 	public List<Film> chercherFilm(FilterCriteria criterias)
 	{
 		Transaction transactionFilm = null;
@@ -119,7 +118,7 @@ public class CourtierBdFilm {
 		{
 			transactionFilm = session.beginTransaction();
 			List<Parameters> myCriterias = criterias.getCriterias();
-			String hql = "SELECT DISTINCT f FROM Film f JOIN f.acteurFilms af";
+			String hql = "SELECT DISTINCT f FROM Film f";// JOIN f.acteurFilms af JOIN f.paysFilms pf JOIN f.realisateurFilms rf";
 			String hqlWHERE = " WHERE 1 = 1"; // This wouldn't cut it if we used OR statements though.
 			boolean hasActeurCriteria = false;
 			boolean hasAnneeCriteria = false;
@@ -171,26 +170,29 @@ public class CourtierBdFilm {
 				case StaticVariables.NOM_GENRE :
 					hasGenreCriteria = true;
 					genres = element.getValues();
-					hqlWHERE += " AND f.titre IN (SELECT af.film.titre FROM FilmGenre fg"
+					hqlWHERE += " AND f.titre IN (SELECT fg.film.titre FROM FilmGenre fg"
 								+ " WHERE fg.genre.nom IN (:genres)"
-								+ " GROUP BY af.film.titre"
+								+ " GROUP BY fg.film.titre"
 								+ " HAVING COUNT(*) >= :nbGenres)";
 					break;
 
 				case StaticVariables.NOM_PAYS :
 					hasPaysCriteria = true;
-					hqlWHERE += singleValue ? 
-							" AND pays.nom = :paysNom"
-							:
-								" AND pays.nom IN(:paysNom)";
+					pays = element.getValues();
+					System.out.println(pays.get(0));
+					hqlWHERE += " AND f.titre IN (SELECT pf.film.titre FROM PaysFilm pf"
+							+ " WHERE pf.pays.nom IN (:pays)"
+							+ " GROUP BY pf.film.titre"
+							+ " HAVING COUNT(*) >= :nbPays)";
 					break;
 
 				case StaticVariables.REALISATEUR_NOM :
 					hasRealisateurCriteria = true;
-					hqlWHERE += singleValue ? 
-							" AND realisateurCinema.nomComplet = :nomRealisateur"
-							:
-								" AND realisateurCinema.nomComplet IN(:nomRealisateur)";
+					realisateurs = element.getValues();
+					hqlWHERE += " AND f.titre IN (SELECT rf.film.titre FROM RealisateurFilm rf"
+								+ " WHERE rf.realisateur.nomComplet IN (:realisateurs)"
+								+ " GROUP BY rf.film.titre"
+								+ " HAVING COUNT(*) >= :nbRealisateurs)";
 					break;
 
 				case StaticVariables.TITRE_FILM :
@@ -207,7 +209,6 @@ public class CourtierBdFilm {
 			
 			String request = hql.concat(hqlWHERE);
 			
-			System.out.println("QUERY: " + request);
 			Query query = session.createQuery(request);
 			
 			if (hasTitreCriteria) {
@@ -233,7 +234,7 @@ public class CourtierBdFilm {
 			}
 			if (hasGenreCriteria) {
 				query.setInteger("nbGenres", genres.size());
-				query.setParameterList("genres", genres);
+				query.setParameterList("genres", genres);				
 			}
 			if (hasPaysCriteria) {
 				query.setInteger("nbPays", pays.size());
@@ -246,7 +247,7 @@ public class CourtierBdFilm {
 			
 			List<Film> results = query.list();
 			for (Film f : results) {
-				System.out.println(f.getTitre());
+				System.out.println(f.getFilmGenres());
 			}
 			
 			if (!transactionFilm.wasCommitted())
@@ -291,9 +292,9 @@ public class CourtierBdFilm {
 		{
 			for(Exemplaire exemplaire : film.getExemplaires())
 			{
-				if (!exemplaire.isEstLoue())
+				if (exemplaire.isEstLoue() == "F")
 				{
-					exemplaire.setEstLoue(true);
+					exemplaire.setEstLoue("T");
 					
 					Location location = new Location();
 					location.setClient(StaticVariables.client);

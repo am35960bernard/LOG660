@@ -49,29 +49,20 @@ public class Film implements java.io.Serializable {
 	@OneToMany(mappedBy="film")
 	private Set<ActeurFilm> acteurFilms = new HashSet<ActeurFilm>(0);
 	
-	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinTable(name="REALISATEURFILM", 
-			joinColumns={ @JoinColumn(name="IDFILM", nullable=false, updatable=false) },
-			inverseJoinColumns={ @JoinColumn(name="IDREALISATEUR", nullable=false, updatable=false) })
-	private Set<Realisateur> realisateurs = new HashSet<Realisateur>(0);
+	@OneToMany(mappedBy="film")
+	private Set<FilmGenre> filmGenres = new HashSet<FilmGenre>(0);
+	
+	@OneToMany(mappedBy="film")
+	private Set<RealisateurFilm> realisateurFilms = new HashSet<RealisateurFilm>(0);
+	
+	@OneToMany(mappedBy="pays")
+	private Set<PaysFilm> paysFilms = new HashSet<PaysFilm>(0);
 	
 	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name="SCENARISTEFILM", 
 			joinColumns={ @JoinColumn(name="IDFILM", nullable=false, updatable=false) },
 			inverseJoinColumns={ @JoinColumn(name="IDSCENARISTE", nullable=false, updatable=false) })
 	private Set<Scenariste> scenaristes = new HashSet<Scenariste>(0);
-	
-	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinTable(name="FILMGENRE", 
-			joinColumns={ @JoinColumn(name="IDFILM", nullable=false, updatable=false) },
-			inverseJoinColumns={ @JoinColumn(name="IDGENRE", nullable=false, updatable=false) })
-	private Set<Genre> genres = new HashSet<Genre>(0);
-	
-	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinTable(name="PAYSFILM", 
-			joinColumns={ @JoinColumn(name="IDFILM", nullable=false, updatable=false) },
-			inverseJoinColumns={ @JoinColumn(name="IDPAYS", nullable=false, updatable=false) })
-	private Set<Pays> pays = new HashSet<Pays>(0);
 	
 	@OneToMany(mappedBy="film")
 	private Set<Exemplaire> exemplaires = new HashSet<Exemplaire>(0);
@@ -142,14 +133,6 @@ public class Film implements java.io.Serializable {
 		this.acteurFilms = acteurFilms;
 	}
 
-	public Set<Realisateur> getRealisateurs() {
-		return realisateurs;
-	}
-
-	public void setRealisateurs(Set<Realisateur> realisateurs) {
-		this.realisateurs = realisateurs;
-	}
-
 	public Set<Scenariste> getScenaristes() {
 		return scenaristes;
 	}
@@ -158,20 +141,12 @@ public class Film implements java.io.Serializable {
 		this.scenaristes = scenaristes;
 	}
 
-	public Set<Genre> getGenres() {
-		return genres;
+	public Set<FilmGenre> getFilmGenres() {
+		return filmGenres;
 	}
 
-	public void setGenres(Set<Genre> genres) {
-		this.genres = genres;
-	}
-
-	public Set<Pays> getPays() {
-		return pays;
-	}
-
-	public void setPays(Set<Pays> pays) {
-		this.pays = pays;
+	public void setFilmGenres(Set<FilmGenre> filmGenres) {
+		this.filmGenres = filmGenres;
 	}
 
 	public Set<Exemplaire> getExemplaires() {
@@ -180,6 +155,22 @@ public class Film implements java.io.Serializable {
 
 	public void setExemplaires(Set<Exemplaire> exemplaires) {
 		this.exemplaires = exemplaires;
+	}
+
+	public Set<RealisateurFilm> getRealisateurFilms() {
+		return realisateurFilms;
+	}
+
+	public void setRealisateurFilms(Set<RealisateurFilm> realisateurFilms) {
+		this.realisateurFilms = realisateurFilms;
+	}
+
+	public Set<PaysFilm> getPaysFilms() {
+		return paysFilms;
+	}
+
+	public void setPaysFilms(Set<PaysFilm> paysFilms) {
+		this.paysFilms = paysFilms;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class Exemplaire implements java.io.Serializable {
 	@SequenceGenerator(name="SEQ", sequenceName="SEQ_EXEMPLAIRE")
 	private int idExemplaire;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="IDFILM")
 	private Film film;
 	
@@ -33,7 +34,7 @@ public class Exemplaire implements java.io.Serializable {
 	private int numCopie;
 	
 	@Column(name="ESTLOUE")
-	private boolean estLoue;
+	private String estLoue;
 	
 	@OneToMany(mappedBy="exemplaire")
 	protected Set<Location> locations = new HashSet<Location>(0);
@@ -41,11 +42,11 @@ public class Exemplaire implements java.io.Serializable {
 	
 	public Exemplaire() {}
 
-	public boolean isEstLoue() {
+	public String isEstLoue() {
 		return estLoue;
 	}
 
-	public void setEstLoue(boolean estLoue) {
+	public void setEstLoue(String estLoue) {
 		this.estLoue = estLoue;
 	}
 	

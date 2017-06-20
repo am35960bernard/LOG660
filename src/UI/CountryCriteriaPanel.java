@@ -87,7 +87,7 @@ public class CountryCriteriaPanel extends JPanel implements CriteriaPanel {
 		   {
 				  Object[] pays = (Object[]) element;
 				  if(pays[1].equals(comboBox.getSelectedItem().toString()))
-				     return String.valueOf(pays[0]);
+				     return String.valueOf(pays[1]);
 
 		   }
 		return "";

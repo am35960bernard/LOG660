@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -14,17 +14,17 @@ import javax.persistence.Table;
 public class Realisateur extends PersonnageDuCinema implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToMany(mappedBy="realisateurs")
-	private Set<Film> films = new HashSet<Film>(0);
+	@OneToMany(mappedBy="realisateur")
+	private Set<RealisateurFilm> realisateurFilms = new HashSet<RealisateurFilm>(0);
 	
-	public Realisateur (){};
-	
-	public Set<Film> getFilms() {
-		return films;
+	public Realisateur (){}
+
+	public Set<RealisateurFilm> getRealisateurFilms() {
+		return realisateurFilms;
 	}
 
-	public void setFilms(Set<Film> films) {
-		this.films = films;
-	}
+	public void setRealisateurFilms(Set<RealisateurFilm> realisateurFilms) {
+		this.realisateurFilms = realisateurFilms;
+	};
 
 }

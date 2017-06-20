@@ -61,10 +61,13 @@ import Controllers.Observer;
 import Model.Acteur;
 import Model.ActeurFilm;
 import Model.Film;
+import Model.FilmGenre;
 import Model.Genre;
 import Model.Pays;
+import Model.PaysFilm;
 import Model.PersonnageDuCinema;
 import Model.Realisateur;
+import Model.RealisateurFilm;
 import Model.Scenariste;
 
 import javax.swing.event.ListSelectionListener;
@@ -661,9 +664,9 @@ public class SearchWindow extends JFrame implements Observer{
 									movieTitleTextField.setText(film.getTitre());
 									releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
 									String pays="";
-				
-									for(Pays p : film.getPays())
-										pays += p.getNom() +",";
+									
+									for(PaysFilm p : film.getPaysFilms())
+										pays += p.getPays().getNom() +",";
 									productionCountryTextField.setText(pays);
 				
 									originalLanguageTextField.setText(film.getLangueOriginale());
@@ -671,19 +674,16 @@ public class SearchWindow extends JFrame implements Observer{
 				
 									String genre = "";
 									String separateurGenre = "";
-									for(Genre g : film.getGenres())
+									for(FilmGenre g : film.getFilmGenres())
 									{
-										genre += separateurGenre + g.getNom();
+										genre += separateurGenre + g.getGenre().getNom();
 										separateurGenre = ", ";
 									}
 									movieGenreTextField.setText(genre);
 				
 									// Hack because there should be only one director.
-									Realisateur realisateur = null;
-									if (film.getRealisateurs().size() > 0)
-									{
-										realisateur = (Realisateur)film.getRealisateurs().toArray()[0];
-									}
+									RealisateurFilm[] rf = new RealisateurFilm[1];
+									Realisateur realisateur = (Realisateur)film.getRealisateurFilms().toArray(rf)[0].getRealisateur();
 				
 									String scenaristes = "";
 									String separateurScenaristes = "";
@@ -807,10 +807,11 @@ public class SearchWindow extends JFrame implements Observer{
 		PersonnageDuCinema crewMember = null;
 		if (film != null)
 		{
-			if (directorRadioButton.isSelected() && film.getRealisateurs().size() > 0)
+			if (directorRadioButton.isSelected() && film.getRealisateurFilms().size() > 0)
 			{
 				// Hack because there should be only one director.
-				crewMember = (Realisateur)film.getRealisateurs().toArray()[0];
+				RealisateurFilm[] rf = new RealisateurFilm[1];
+				crewMember = (Realisateur)film.getRealisateurFilms().toArray(rf)[0].getRealisateur();
 			}
 			else if (actorsRadioButton.isSelected() && !actorsList.isSelectionEmpty())
 			{

@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -26,8 +26,8 @@ public class Pays implements java.io.Serializable {
 	@Column(name="NOM")
 	private String nom;
 	
-	@ManyToMany(mappedBy="pays")
-	private Set<Film> films = new HashSet<Film>(0);
+	@OneToMany(mappedBy="pays")
+	private Set<PaysFilm> paysFilms = new HashSet<PaysFilm>(0);
 	
 	public Pays(){}
 
@@ -47,11 +47,11 @@ public class Pays implements java.io.Serializable {
 		this.nom = nom;
 	}
 
-	public Set<Film> getFilms() {
-		return films;
+	public Set<PaysFilm> getPaysFilms() {
+		return paysFilms;
 	}
 
-	public void setFilms(Set<Film> films) {
-		this.films = films;
+	public void setPaysFilms(Set<PaysFilm> paysFilms) {
+		this.paysFilms = paysFilms;
 	}
 }
