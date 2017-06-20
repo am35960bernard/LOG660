@@ -292,7 +292,7 @@ public class CourtierBdFilm {
 		{
 			for(Exemplaire exemplaire : film.getExemplaires())
 			{
-				if (exemplaire.isEstLoue() == "F")
+				if (exemplaire.isEstLoue().equals("F"))
 				{
 					exemplaire.setEstLoue("T");
 					
