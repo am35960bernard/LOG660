@@ -177,7 +177,8 @@ public class AnalysisWindow extends JFrame {
 		});
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		searchPanel.add(searchButton);
-		
+
+		ageGroupComboBox.addItem(new ComboBoxItem(null, "(tous)"));
 		for (int i = 0; i < 20; i++)
 		{
 			String value = Integer.toString(i);
@@ -186,7 +187,8 @@ public class AnalysisWindow extends JFrame {
 			String description = "de " + ageMin + " à " + ageMax + " ans";
 			ageGroupComboBox.addItem(new ComboBoxItem(value, description));
 		}
-		
+
+		provinceComboBox.addItem(new ComboBoxItem(null, "(tous)"));
 		provinceComboBox.addItem(new ComboBoxItem("AB", "Alberta"));
 		provinceComboBox.addItem(new ComboBoxItem("BC", "Colombie-Britanique"));
 		provinceComboBox.addItem(new ComboBoxItem("IPE", "Île-du-Prince-Édouard"));
@@ -199,7 +201,8 @@ public class AnalysisWindow extends JFrame {
 		provinceComboBox.addItem(new ComboBoxItem("NU", "Nunavut"));
 		provinceComboBox.addItem(new ComboBoxItem("NT", "Territoires du Nord-Ouest"));
 		provinceComboBox.addItem(new ComboBoxItem("YT", "Yukon"));
-		
+
+		weekDayComboBox.addItem(new ComboBoxItem(null, "(tous)"));
 		weekDayComboBox.addItem(new ComboBoxItem("Monday", "lundi"));
 		weekDayComboBox.addItem(new ComboBoxItem("Tuesday", "mardi"));
 		weekDayComboBox.addItem(new ComboBoxItem("Wednesday", "mercredi"));
@@ -208,6 +211,7 @@ public class AnalysisWindow extends JFrame {
 		weekDayComboBox.addItem(new ComboBoxItem("Saturday", "samedi"));
 		weekDayComboBox.addItem(new ComboBoxItem("Sunday", "dimanche"));
 
+		monthComboBox.addItem(new ComboBoxItem(null, "(tous)"));
 		monthComboBox.addItem(new ComboBoxItem("January", "janvier"));
 		monthComboBox.addItem(new ComboBoxItem("February", "février"));
 		monthComboBox.addItem(new ComboBoxItem("March", "mars"));

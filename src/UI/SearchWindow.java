@@ -75,6 +75,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.AbstractListModel;
 
 public class SearchWindow extends JFrame implements Observer{
 
@@ -104,6 +105,7 @@ public class SearchWindow extends JFrame implements Observer{
 	private JRadioButton directorRadioButton;
 	private JRadioButton actorsRadioButton;
 	private JButton rentMovieButton;
+	private JTextField averageRatingTextField;
 
 	/**
 	 * Create the frame.
@@ -263,26 +265,45 @@ public class SearchWindow extends JFrame implements Observer{
 		movieDetailsSplitPane.setLeftComponent(movieDetailsPanel);
 		GridBagLayout gbl_movieDetailsPanel = new GridBagLayout();
 		gbl_movieDetailsPanel.columnWidths = new int[]{0, 0, 0};
-		gbl_movieDetailsPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_movieDetailsPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_movieDetailsPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_movieDetailsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_movieDetailsPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		movieDetailsPanel.setLayout(gbl_movieDetailsPanel);
 
 		JLabel lblDtailsDuFilm = new JLabel("Détails du film:");
 		lblDtailsDuFilm.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GridBagConstraints gbc_lblDtailsDuFilm = new GridBagConstraints();
 		gbc_lblDtailsDuFilm.gridwidth = 2;
-		gbc_lblDtailsDuFilm.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDtailsDuFilm.insets = new Insets(0, 0, 5, 0);
 		gbc_lblDtailsDuFilm.gridx = 0;
 		gbc_lblDtailsDuFilm.gridy = 0;
 		movieDetailsPanel.add(lblDtailsDuFilm, gbc_lblDtailsDuFilm);
+		
+		JLabel averageRatingLabel = new JLabel("Cote moyenne:");
+		GridBagConstraints gbc_averageRatingLabel = new GridBagConstraints();
+		gbc_averageRatingLabel.anchor = GridBagConstraints.EAST;
+		gbc_averageRatingLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_averageRatingLabel.gridx = 0;
+		gbc_averageRatingLabel.gridy = 1;
+		movieDetailsPanel.add(averageRatingLabel, gbc_averageRatingLabel);
+		
+		averageRatingTextField = new JTextField();
+		averageRatingTextField.setPreferredSize(new Dimension(6, 25));
+		averageRatingTextField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		GridBagConstraints gbc_averageRatingTextField = new GridBagConstraints();
+		gbc_averageRatingTextField.insets = new Insets(0, 0, 5, 0);
+		gbc_averageRatingTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_averageRatingTextField.gridx = 1;
+		gbc_averageRatingTextField.gridy = 1;
+		movieDetailsPanel.add(averageRatingTextField, gbc_averageRatingTextField);
+		averageRatingTextField.setColumns(10);
 
 		JLabel movieTitleLabel = new JLabel("Titre du film:");
 		GridBagConstraints gbc_movieTitleLabel = new GridBagConstraints();
 		gbc_movieTitleLabel.anchor = GridBagConstraints.EAST;
 		gbc_movieTitleLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_movieTitleLabel.gridx = 0;
-		gbc_movieTitleLabel.gridy = 1;
+		gbc_movieTitleLabel.gridy = 2;
 		movieDetailsPanel.add(movieTitleLabel, gbc_movieTitleLabel);
 
 		movieTitleTextField = new JTextField();
@@ -293,7 +314,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieTitleTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_movieTitleTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_movieTitleTextField.gridx = 1;
-		gbc_movieTitleTextField.gridy = 1;
+		gbc_movieTitleTextField.gridy = 2;
 		movieDetailsPanel.add(movieTitleTextField, gbc_movieTitleTextField);
 
 		JLabel releaseYearLabel = new JLabel("Année de sortie:");
@@ -301,7 +322,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_releaseYearLabel.anchor = GridBagConstraints.EAST;
 		gbc_releaseYearLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_releaseYearLabel.gridx = 0;
-		gbc_releaseYearLabel.gridy = 2;
+		gbc_releaseYearLabel.gridy = 3;
 		movieDetailsPanel.add(releaseYearLabel, gbc_releaseYearLabel);
 
 		releaseYearTextField = new JTextField();
@@ -312,7 +333,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_releaseYearTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_releaseYearTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_releaseYearTextField.gridx = 1;
-		gbc_releaseYearTextField.gridy = 2;
+		gbc_releaseYearTextField.gridy = 3;
 		movieDetailsPanel.add(releaseYearTextField, gbc_releaseYearTextField);
 
 		JLabel productionCountryLabel = new JLabel("Pays de production:");
@@ -320,7 +341,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_productionCountryLabel.anchor = GridBagConstraints.EAST;
 		gbc_productionCountryLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_productionCountryLabel.gridx = 0;
-		gbc_productionCountryLabel.gridy = 3;
+		gbc_productionCountryLabel.gridy = 4;
 		movieDetailsPanel.add(productionCountryLabel, gbc_productionCountryLabel);
 
 		productionCountryTextField = new JTextField();
@@ -331,7 +352,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_productionCountryTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_productionCountryTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_productionCountryTextField.gridx = 1;
-		gbc_productionCountryTextField.gridy = 3;
+		gbc_productionCountryTextField.gridy = 4;
 		movieDetailsPanel.add(productionCountryTextField, gbc_productionCountryTextField);
 
 		JLabel originalLanguageLabel = new JLabel("Langue originale:");
@@ -339,7 +360,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_originalLanguageLabel.anchor = GridBagConstraints.EAST;
 		gbc_originalLanguageLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_originalLanguageLabel.gridx = 0;
-		gbc_originalLanguageLabel.gridy = 4;
+		gbc_originalLanguageLabel.gridy = 5;
 		movieDetailsPanel.add(originalLanguageLabel, gbc_originalLanguageLabel);
 
 		originalLanguageTextField = new JTextField();
@@ -350,7 +371,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_originalLanguageTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_originalLanguageTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_originalLanguageTextField.gridx = 1;
-		gbc_originalLanguageTextField.gridy = 4;
+		gbc_originalLanguageTextField.gridy = 5;
 		movieDetailsPanel.add(originalLanguageTextField, gbc_originalLanguageTextField);
 
 		JLabel movieLengthLabel = new JLabel("Durée:");
@@ -358,7 +379,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieLengthLabel.anchor = GridBagConstraints.EAST;
 		gbc_movieLengthLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_movieLengthLabel.gridx = 0;
-		gbc_movieLengthLabel.gridy = 5;
+		gbc_movieLengthLabel.gridy = 6;
 		movieDetailsPanel.add(movieLengthLabel, gbc_movieLengthLabel);
 
 		movieLengthTextField = new JTextField();
@@ -369,7 +390,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieLengthTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_movieLengthTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_movieLengthTextField.gridx = 1;
-		gbc_movieLengthTextField.gridy = 5;
+		gbc_movieLengthTextField.gridy = 6;
 		movieDetailsPanel.add(movieLengthTextField, gbc_movieLengthTextField);
 
 		JLabel movieGenreLabel = new JLabel("Genres:");
@@ -377,7 +398,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieGenreLabel.anchor = GridBagConstraints.EAST;
 		gbc_movieGenreLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_movieGenreLabel.gridx = 0;
-		gbc_movieGenreLabel.gridy = 6;
+		gbc_movieGenreLabel.gridy = 7;
 		movieDetailsPanel.add(movieGenreLabel, gbc_movieGenreLabel);
 
 		movieGenreTextField = new JTextField();
@@ -388,7 +409,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieGenreTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_movieGenreTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_movieGenreTextField.gridx = 1;
-		gbc_movieGenreTextField.gridy = 6;
+		gbc_movieGenreTextField.gridy = 7;
 		movieDetailsPanel.add(movieGenreTextField, gbc_movieGenreTextField);
 
 		JLabel movieScenaristLabel = new JLabel("Sc\u00E9naristes:");
@@ -396,7 +417,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieScenaristLabel.anchor = GridBagConstraints.EAST;
 		gbc_movieScenaristLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_movieScenaristLabel.gridx = 0;
-		gbc_movieScenaristLabel.gridy = 7;
+		gbc_movieScenaristLabel.gridy = 8;
 		movieDetailsPanel.add(movieScenaristLabel, gbc_movieScenaristLabel);
 
 		movieScenaristTextField = new JTextField();
@@ -407,7 +428,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieScenaristTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_movieScenaristTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_movieScenaristTextField.gridx = 1;
-		gbc_movieScenaristTextField.gridy = 7;
+		gbc_movieScenaristTextField.gridy = 8;
 		movieDetailsPanel.add(movieScenaristTextField, gbc_movieScenaristTextField);
 
 		JLabel movieSummaryLabel = new JLabel("Résumé du scénario:");
@@ -415,7 +436,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_movieSummaryLabel.anchor = GridBagConstraints.NORTHEAST;
 		gbc_movieSummaryLabel.insets = new Insets(0, 0, 0, 5);
 		gbc_movieSummaryLabel.gridx = 0;
-		gbc_movieSummaryLabel.gridy = 8;
+		gbc_movieSummaryLabel.gridy = 9;
 		movieDetailsPanel.add(movieSummaryLabel, gbc_movieSummaryLabel);
 
 		movieSummaryTextArea = new JTextArea();
@@ -425,7 +446,7 @@ public class SearchWindow extends JFrame implements Observer{
 		GridBagConstraints gbc_movieSummaryTextArea = new GridBagConstraints();
 		gbc_movieSummaryTextArea.fill = GridBagConstraints.BOTH;
 		gbc_movieSummaryTextArea.gridx = 1;
-		gbc_movieSummaryTextArea.gridy = 8;
+		gbc_movieSummaryTextArea.gridy = 9;
 		movieDetailsPanel.add(movieSummaryTextArea, gbc_movieSummaryTextArea);
 
 		JSplitPane actorsSplitPane = new JSplitPane();
@@ -621,28 +642,41 @@ public class SearchWindow extends JFrame implements Observer{
 		foundMoviesListPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		foundMoviesSplitPane.setLeftComponent(foundMoviesListPanel);
 		GridBagLayout gbl_foundMoviesListPanel = new GridBagLayout();
-		gbl_foundMoviesListPanel.columnWidths = new int[]{0, 0};
-		gbl_foundMoviesListPanel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_foundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_foundMoviesListPanel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_foundMoviesListPanel.columnWidths = new int[] {0};
+		gbl_foundMoviesListPanel.rowHeights = new int[] {0, 0, 0};
+		gbl_foundMoviesListPanel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_foundMoviesListPanel.rowWeights = new double[]{1.0, 0.0, 0.0};
 		foundMoviesListPanel.setLayout(gbl_foundMoviesListPanel);
+		
+		JPanel topFoundMoviesListPanel = new JPanel();
+		GridBagConstraints gbc_topFoundMoviesListPanel = new GridBagConstraints();
+		gbc_topFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
+		gbc_topFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
+		gbc_topFoundMoviesListPanel.gridx = 0;
+		gbc_topFoundMoviesListPanel.gridy = 0;
+		foundMoviesListPanel.add(topFoundMoviesListPanel, gbc_topFoundMoviesListPanel);
+		GridBagLayout gbl_topFoundMoviesListPanel = new GridBagLayout();
+		gbl_topFoundMoviesListPanel.columnWidths = new int[]{0, 0};
+		gbl_topFoundMoviesListPanel.rowHeights = new int[] {0, 0};
+		gbl_topFoundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_topFoundMoviesListPanel.rowWeights = new double[]{0.0, 1.0};
+		topFoundMoviesListPanel.setLayout(gbl_topFoundMoviesListPanel);
 
-		JLabel lblRsultatDeLa = new JLabel("Résultat de la recherche");
-		lblRsultatDeLa.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRsultatDeLa.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JLabel lblRsultatDeLa = new JLabel("R\u00E9sultat de la recherche:");
 		GridBagConstraints gbc_lblRsultatDeLa = new GridBagConstraints();
 		gbc_lblRsultatDeLa.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRsultatDeLa.gridx = 0;
 		gbc_lblRsultatDeLa.gridy = 0;
-		foundMoviesListPanel.add(lblRsultatDeLa, gbc_lblRsultatDeLa);
+		topFoundMoviesListPanel.add(lblRsultatDeLa, gbc_lblRsultatDeLa);
+		lblRsultatDeLa.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRsultatDeLa.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JScrollPane foundMoviesScrollPane = new JScrollPane();
 		GridBagConstraints gbc_foundMoviesScrollPane = new GridBagConstraints();
 		gbc_foundMoviesScrollPane.fill = GridBagConstraints.BOTH;
-		gbc_foundMoviesScrollPane.insets = new Insets(0, 0, 5, 0);
 		gbc_foundMoviesScrollPane.gridx = 0;
 		gbc_foundMoviesScrollPane.gridy = 1;
-		foundMoviesListPanel.add(foundMoviesScrollPane, gbc_foundMoviesScrollPane);
+		topFoundMoviesListPanel.add(foundMoviesScrollPane, gbc_foundMoviesScrollPane);
 		
 				foundMoviesList = new JList<Film>();
 				foundMoviesScrollPane.setViewportView(foundMoviesList);
@@ -730,19 +764,56 @@ public class SearchWindow extends JFrame implements Observer{
 						});
 		foundMoviesList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		foundMoviesList.setCellRenderer(new FilmListCellRenderer());
-
-		JPanel foundMoviesListButtonsPanel = new JPanel();
-		GridBagConstraints gbc_foundMoviesListButtonsPanel = new GridBagConstraints();
-		gbc_foundMoviesListButtonsPanel.fill = GridBagConstraints.BOTH;
-		gbc_foundMoviesListButtonsPanel.gridx = 0;
-		gbc_foundMoviesListButtonsPanel.gridy = 2;
-		foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
-		foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-
-		rentMovieButton = new JButton("Louer ce film");
-		rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		rentMovieButton.setEnabled(false);
-		foundMoviesListButtonsPanel.add(rentMovieButton);
+				
+				JPanel bottomFoundMoviesListPanel = new JPanel();
+				GridBagConstraints gbc_bottomFoundMoviesListPanel = new GridBagConstraints();
+				gbc_bottomFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
+				gbc_bottomFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
+				gbc_bottomFoundMoviesListPanel.gridx = 0;
+				gbc_bottomFoundMoviesListPanel.gridy = 1;
+				foundMoviesListPanel.add(bottomFoundMoviesListPanel, gbc_bottomFoundMoviesListPanel);
+				GridBagLayout gbl_bottomFoundMoviesListPanel = new GridBagLayout();
+				gbl_bottomFoundMoviesListPanel.columnWidths = new int[]{0, 0};
+				gbl_bottomFoundMoviesListPanel.rowHeights = new int[] {0, 0};
+				gbl_bottomFoundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+				gbl_bottomFoundMoviesListPanel.rowWeights = new double[]{0.0, 0.0};
+				bottomFoundMoviesListPanel.setLayout(gbl_bottomFoundMoviesListPanel);
+				
+				JLabel lblRecommandations = new JLabel("Recommandations:");
+				lblRecommandations.setHorizontalAlignment(SwingConstants.CENTER);
+				lblRecommandations.setFont(new Font("Tahoma", Font.BOLD, 15));
+				GridBagConstraints gbc_lblRecommandations = new GridBagConstraints();
+				gbc_lblRecommandations.insets = new Insets(0, 0, 5, 0);
+				gbc_lblRecommandations.gridx = 0;
+				gbc_lblRecommandations.gridy = 0;
+				bottomFoundMoviesListPanel.add(lblRecommandations, gbc_lblRecommandations);
+				
+				JScrollPane recommandationsScrollPane = new JScrollPane();
+				GridBagConstraints gbc_recommandationsScrollPane = new GridBagConstraints();
+				gbc_recommandationsScrollPane.fill = GridBagConstraints.BOTH;
+				gbc_recommandationsScrollPane.gridx = 0;
+				gbc_recommandationsScrollPane.gridy = 1;
+				bottomFoundMoviesListPanel.add(recommandationsScrollPane, gbc_recommandationsScrollPane);
+				
+				JList<Film> recommandationsList = new JList<Film>();
+				recommandationsList.setVisibleRowCount(3);
+				recommandationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				recommandationsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				recommandationsScrollPane.setViewportView(recommandationsList);
+						
+								JPanel foundMoviesListButtonsPanel = new JPanel();
+								GridBagConstraints gbc_foundMoviesListButtonsPanel = new GridBagConstraints();
+								gbc_foundMoviesListButtonsPanel.fill = GridBagConstraints.BOTH;
+								gbc_foundMoviesListButtonsPanel.insets = new Insets(0, 0, 5, 0);
+								gbc_foundMoviesListButtonsPanel.gridx = 0;
+								gbc_foundMoviesListButtonsPanel.gridy = 2;
+								foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
+								foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+								
+										rentMovieButton = new JButton("Louer ce film");
+										rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+										rentMovieButton.setEnabled(false);
+										foundMoviesListButtonsPanel.add(rentMovieButton);
 
 		contentPane.addComponentListener(new ComponentAdapter() {
 			@Override
