@@ -25,22 +25,6 @@ public class AnalysisWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField nbLocationsTextField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AnalysisWindow frame = new AnalysisWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	private class ComboBoxItem
 	{
@@ -73,7 +57,7 @@ public class AnalysisWindow extends JFrame {
 	public AnalysisWindow() {
 		setResizable(false);
 		setTitle("Webflix - Analyse");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 254);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

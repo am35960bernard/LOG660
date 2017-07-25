@@ -151,9 +151,19 @@ public class SearchWindow extends JFrame implements Observer{
 		menuBar.setFont(new Font("Tahoma", Font.BOLD, 15));
 		disconnectPanel.add(menuBar);
 
-		JMenu userMenu = new JMenu("Utilisateur");
+		JMenu userMenu = new JMenu("Menu");
 		userMenu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		menuBar.add(userMenu);
+		
+		JMenuItem analysisMenuItem = new JMenuItem("Analyse des locations");
+		analysisMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		analysisMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AnalysisWindow analysisWindow = new AnalysisWindow();
+				analysisWindow.setVisible(true);
+			}
+		});
+		userMenu.add(analysisMenuItem);
 
 		JMenuItem disconnectUserMenuItem = new JMenuItem("D\u00E9connexion");
 		disconnectUserMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -167,7 +177,7 @@ public class SearchWindow extends JFrame implements Observer{
 			}
 		});
 		userMenu.add(disconnectUserMenuItem);
-
+		
 		JScrollPane criteriaScrollPane = new JScrollPane();
 		criteriaScrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		criteriaScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
