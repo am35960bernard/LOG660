@@ -100,7 +100,7 @@ public class AnalysisWindow extends JFrame {
 		gbc_provinceLabel.gridy = 1;
 		criteriaPanel.add(provinceLabel, gbc_provinceLabel);
 		
-		JComboBox provinceComboBox = new JComboBox();
+		JComboBox<ComboBoxItem> provinceComboBox = new JComboBox<ComboBoxItem>();
 		provinceComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GridBagConstraints gbc_provinceComboBox = new GridBagConstraints();
 		gbc_provinceComboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -118,7 +118,7 @@ public class AnalysisWindow extends JFrame {
 		gbc_weekDayLabel.gridy = 2;
 		criteriaPanel.add(weekDayLabel, gbc_weekDayLabel);
 		
-		JComboBox weekDayComboBox = new JComboBox();
+		JComboBox<ComboBoxItem> weekDayComboBox = new JComboBox<ComboBoxItem>();
 		weekDayComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GridBagConstraints gbc_weekDayComboBox = new GridBagConstraints();
 		gbc_weekDayComboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -136,7 +136,7 @@ public class AnalysisWindow extends JFrame {
 		gbc_monthLabel.gridy = 3;
 		criteriaPanel.add(monthLabel, gbc_monthLabel);
 		
-		JComboBox monthComboBox = new JComboBox();
+		JComboBox<ComboBoxItem> monthComboBox = new JComboBox<ComboBoxItem>();
 		monthComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GridBagConstraints gbc_monthComboBox = new GridBagConstraints();
 		gbc_monthComboBox.fill = GridBagConstraints.HORIZONTAL;
