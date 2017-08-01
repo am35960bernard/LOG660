@@ -127,7 +127,7 @@ public class LoginWindow extends JFrame implements Observer{
 		
 		txtCourrielUtilisateur = new JTextField();
 		txtCourrielUtilisateur.setPreferredSize(new Dimension(6, 25));
-		txtCourrielUtilisateur.setText("WilmaSHuff27@hotmail.com");
+		txtCourrielUtilisateur.setText("JeanNTibbs40@hotmail.com");
 		mainPanel.add(txtCourrielUtilisateur, "4, 2, fill, default");
 		txtCourrielUtilisateur.setColumns(10);
 		
@@ -136,7 +136,7 @@ public class LoginWindow extends JFrame implements Observer{
 		
 		txtMotDePasseUtilisateur = new JPasswordField();
 		txtMotDePasseUtilisateur.setPreferredSize(new Dimension(6, 25));
-		txtMotDePasseUtilisateur.setText("Thi0ruimie");
+		txtMotDePasseUtilisateur.setText("Aa8hooTa9");
 		mainPanel.add(txtMotDePasseUtilisateur, "4, 4");
 		
 		messagePanel = new JPanel();
