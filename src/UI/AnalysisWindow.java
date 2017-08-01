@@ -173,6 +173,8 @@ public class AnalysisWindow extends JFrame {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Interrogate DB to get number of locations...
+				
+				
 			}
 		});
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
