@@ -682,86 +682,6 @@ public class SearchWindow extends JFrame implements Observer{
 				foundMoviesScrollPane.setViewportView(foundMoviesList);
 				foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				
-						foundMoviesList.addListSelectionListener(new ListSelectionListener() {
-							public void valueChanged(ListSelectionEvent arg0) {
-								if (foundMoviesList.isSelectionEmpty())
-								{
-				
-									rentMovieButton.setEnabled(false);
-				
-									movieTitleTextField.setText(null);
-									releaseYearTextField.setText(null);
-									productionCountryTextField.setText(null);
-									originalLanguageTextField.setText(null);
-									movieLengthTextField.setText(null);
-									movieGenreTextField.setText(null);
-									movieScenaristTextField.setText(null);
-									directorTextField.setText(null);
-									movieSummaryTextArea.setText(null);
-									actorsList.setModel(new DefaultListModel<Acteur>());
-								}
-								else
-								{
-								
-									Film film = foundMoviesList.getSelectedValue();
-									
-									movieTitleTextField.setText(film.getTitre());
-									releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
-									String pays="";
-									
-									for(PaysFilm p : film.getPaysFilms())
-										pays += p.getPays().getNom() +",";
-									productionCountryTextField.setText(pays);
-				
-									originalLanguageTextField.setText(film.getLangueOriginale());
-									movieLengthTextField.setText(String.valueOf(film.getDuree()));
-				
-									String genre = "";
-									String separateurGenre = "";
-									for(FilmGenre g : film.getFilmGenres())
-									{
-										genre += separateurGenre + g.getGenre().getNom();
-										separateurGenre = ", ";
-									}
-									movieGenreTextField.setText(genre);
-				
-									// Hack because there should be only one director.
-									RealisateurFilm[] rf = new RealisateurFilm[1];
-									Realisateur realisateur = (Realisateur)film.getRealisateurFilms().toArray(rf)[0].getRealisateur();
-				
-									String scenaristes = "";
-									String separateurScenaristes = "";
-									for(Scenariste s : film.getScenaristes())
-									{
-										scenaristes += separateurScenaristes + s.getNomScenariste();
-										separateurScenaristes = ", ";
-									}
-									movieScenaristTextField.setText(scenaristes);
-									
-									if (realisateur == null)
-									{
-										directorTextField.setText(null);										
-									}
-									else
-									{
-										directorTextField.setText(realisateur.getNomComplet());										
-									}
-									movieSummaryTextArea.setText(film.getResume());
-									DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
-									for (ActeurFilm acteurFilm: film.getActeurFilms())
-									{
-										Acteur acteur = acteurFilm.getActeur();
-										model.addElement(acteur);
-									}
-									actorsList.setModel(model);
-				
-									rentMovieButton.setEnabled(true);
-								}
-				
-								directorRadioButton.setSelected(true);
-								showCrewMemberDetails();
-							}
-						});
 		foundMoviesList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		foundMoviesList.setCellRenderer(new FilmListCellRenderer());
 				
@@ -825,12 +745,34 @@ public class SearchWindow extends JFrame implements Observer{
 				criteriasPanel.revalidate();
 			}
 		});
+		
+		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				recommandationsList.clearSelection();
+				Film film = foundMoviesList.getSelectedValue();
+				setSelectedMovie(film);
+				showRecommandedMovies(film);
+			}
+		});
+		
+		recommandationsList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				foundMoviesList.clearSelection();
+				Film film = recommandationsList.getSelectedValue();
+				setSelectedMovie(film);
+			}
+		});
 
 		JPanel initialPanel = new TitleCriteriaPanel();
 		setCriteriaPanelSize(criteriaScrollPane, initialPanel);
 		criteriasPanel.add(initialPanel);
 	}
 
+	private void showRecommandedMovies(Film film)
+	{
+		
+	}
+	
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)
 	{
 		int width = scrollPane.getViewport().getWidth() - 2 * CRITERIA_PANELS_MARGIN;
@@ -939,5 +881,80 @@ public class SearchWindow extends JFrame implements Observer{
 	public void update(Film contentToUpdate) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void setSelectedMovie(Film film)
+	{
+		if (film == null)
+		{
+			rentMovieButton.setEnabled(false);
+			movieTitleTextField.setText(null);
+			releaseYearTextField.setText(null);
+			productionCountryTextField.setText(null);
+			originalLanguageTextField.setText(null);
+			movieLengthTextField.setText(null);
+			movieGenreTextField.setText(null);
+			movieScenaristTextField.setText(null);
+			directorTextField.setText(null);
+			movieSummaryTextArea.setText(null);
+			actorsList.setModel(new DefaultListModel<Acteur>());
+		}
+		else
+		{
+			movieTitleTextField.setText(film.getTitre());
+			releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
+			String pays="";
+			
+			for(PaysFilm p : film.getPaysFilms())
+				pays += p.getPays().getNom() +",";
+			productionCountryTextField.setText(pays);
+
+			originalLanguageTextField.setText(film.getLangueOriginale());
+			movieLengthTextField.setText(String.valueOf(film.getDuree()));
+
+			String genre = "";
+			String separateurGenre = "";
+			for(FilmGenre g : film.getFilmGenres())
+			{
+				genre += separateurGenre + g.getGenre().getNom();
+				separateurGenre = ", ";
+			}
+			movieGenreTextField.setText(genre);
+
+			// Hack because there should be only one director.
+			RealisateurFilm[] rf = new RealisateurFilm[1];
+			Realisateur realisateur = (Realisateur)film.getRealisateurFilms().toArray(rf)[0].getRealisateur();
+
+			String scenaristes = "";
+			String separateurScenaristes = "";
+			for(Scenariste s : film.getScenaristes())
+			{
+				scenaristes += separateurScenaristes + s.getNomScenariste();
+				separateurScenaristes = ", ";
+			}
+			movieScenaristTextField.setText(scenaristes);
+			
+			if (realisateur == null)
+			{
+				directorTextField.setText(null);										
+			}
+			else
+			{
+				directorTextField.setText(realisateur.getNomComplet());										
+			}
+			movieSummaryTextArea.setText(film.getResume());
+			DefaultListModel<Acteur> model = new DefaultListModel<Acteur>();
+			for (ActeurFilm acteurFilm: film.getActeurFilms())
+			{
+				Acteur acteur = acteurFilm.getActeur();
+				model.addElement(acteur);
+			}
+			actorsList.setModel(model);
+
+			rentMovieButton.setEnabled(true);
+		}
+
+		directorRadioButton.setSelected(true);
+		showCrewMemberDetails();
 	}
 }

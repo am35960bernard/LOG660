@@ -1,5 +1,10 @@
 package Services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -322,5 +327,29 @@ public class CourtierBdFilm {
 		{
 			//session.flush();
 		}
+	}
+	
+	public List<Film> getRecommandedMovies(Connection con, Film film)
+	{
+		List<Film> recommandedMovies = new ArrayList<Film>();
+
+	    PreparedStatement stmt = null;
+		String sql = "SELECT TOP 3 idfilmk FROM MATERIALIZED_CORRELATION_COTES WHERE idfilmj == ? ORDER BY correlation DESC";
+	    try {
+	        stmt = con.prepareStatement(sql);
+	        stmt.setInt(1, film.getIdFilm());
+	        ResultSet rs = stmt.executeQuery(sql);
+	        while (rs.next()) {
+	            int recommandedMovieId = rs.getInt("idfilmk");
+				String hql = "SELECT DISTINCT f FROM Film f WHERE idfilm = :idfilm";
+				Query query = session.createQuery(hql);
+				query.setInteger("idfilm", recommandedMovieId);
+	        }
+	        stmt.close();
+	    } catch (SQLException e ) {
+			System.out.println(e);
+	    }
+	    
+		return recommandedMovies;
 	}
 }
