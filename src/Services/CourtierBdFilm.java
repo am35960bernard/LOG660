@@ -353,4 +353,25 @@ public class CourtierBdFilm {
 	    }
 		return recommandations;
 	}
+	
+	public static Double getAverageRating(Film film)
+	{
+		Double averageRating = null;
+	    try {
+	    	Connection con = SimpleConnection.GetSimpleDBConnection();
+		    PreparedStatement stmt = null;
+			String sql = "SELECT cote_moyenne FROM MATERIALIZED_COTES_MOYENNES WHERE idfilm = ?";
+	        stmt = con.prepareStatement(sql);
+	        stmt.setInt(1, film.getXmlId());
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next())
+	        {
+	        	averageRating = rs.getDouble("cote_moyenne");
+	        }
+	        stmt.close();
+	    } catch (SQLException e ) {
+			System.out.println(e);
+	    }
+		return averageRating;
+	}
 }

@@ -905,6 +905,7 @@ public class SearchWindow extends JFrame implements Observer{
 		if (film == null)
 		{
 			rentMovieButton.setEnabled(false);
+			averageRatingTextField.setText(null);
 			movieTitleTextField.setText(null);
 			releaseYearTextField.setText(null);
 			productionCountryTextField.setText(null);
@@ -918,6 +919,16 @@ public class SearchWindow extends JFrame implements Observer{
 		}
 		else
 		{
+			Double averageRating = CourtierBdFilm.getAverageRating(film);
+			if (averageRating != null)
+			{
+				averageRatingTextField.setText(String.format( "%.2f", averageRating ) + " / 5.00");
+			}
+			else
+			{
+				averageRatingTextField.setText(String.format("(not rated)"));
+			}
+			
 			movieTitleTextField.setText(film.getTitre());
 			releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
 			String pays="";
