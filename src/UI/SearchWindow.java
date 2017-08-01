@@ -108,7 +108,7 @@ public class SearchWindow extends JFrame implements Observer{
 	private JRadioButton actorsRadioButton;
 	private JButton rentMovieButton;
 	private JTextField averageRatingTextField;
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -158,7 +158,7 @@ public class SearchWindow extends JFrame implements Observer{
 		JMenu userMenu = new JMenu("Menu");
 		userMenu.setFont(new Font("Tahoma", Font.BOLD, 15));
 		menuBar.add(userMenu);
-		
+
 		JMenuItem analysisMenuItem = new JMenuItem("Analyse des locations");
 		analysisMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		analysisMenuItem.addActionListener(new ActionListener() {
@@ -181,7 +181,7 @@ public class SearchWindow extends JFrame implements Observer{
 			}
 		});
 		userMenu.add(disconnectUserMenuItem);
-		
+
 		JScrollPane criteriaScrollPane = new JScrollPane();
 		criteriaScrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		criteriaScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -280,7 +280,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_lblDtailsDuFilm.gridx = 0;
 		gbc_lblDtailsDuFilm.gridy = 0;
 		movieDetailsPanel.add(lblDtailsDuFilm, gbc_lblDtailsDuFilm);
-		
+
 		JLabel averageRatingLabel = new JLabel("Cote moyenne:");
 		GridBagConstraints gbc_averageRatingLabel = new GridBagConstraints();
 		gbc_averageRatingLabel.anchor = GridBagConstraints.EAST;
@@ -288,7 +288,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbc_averageRatingLabel.gridx = 0;
 		gbc_averageRatingLabel.gridy = 1;
 		movieDetailsPanel.add(averageRatingLabel, gbc_averageRatingLabel);
-		
+
 		averageRatingTextField = new JTextField();
 		averageRatingTextField.setPreferredSize(new Dimension(6, 25));
 		averageRatingTextField.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -620,23 +620,23 @@ public class SearchWindow extends JFrame implements Observer{
 		};
 		directorRadioButton.addItemListener(crewMemberTypeListener);
 		actorsRadioButton.addItemListener(crewMemberTypeListener);
-		
+
 		JScrollPane actorsScrollPane = new JScrollPane();
 		GridBagConstraints gbc_actorsScrollPane = new GridBagConstraints();
 		gbc_actorsScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_actorsScrollPane.gridx = 1;
 		gbc_actorsScrollPane.gridy = 2;
 		directorAndActorsPanel.add(actorsScrollPane, gbc_actorsScrollPane);
-		
-				actorsList = new JList<Acteur>();
-				actorsScrollPane.setViewportView(actorsList);
-				actorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				actorsList.setEnabled(false);
-				actorsList.addListSelectionListener(new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-						showCrewMemberDetails();
-					}
-				});
+
+		actorsList = new JList<Acteur>();
+		actorsScrollPane.setViewportView(actorsList);
+		actorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		actorsList.setEnabled(false);
+		actorsList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				showCrewMemberDetails();
+			}
+		});
 		actorsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		actorsList.setCellRenderer(new ActorListCellRenderer());
 
@@ -649,7 +649,7 @@ public class SearchWindow extends JFrame implements Observer{
 		gbl_foundMoviesListPanel.columnWeights = new double[]{Double.MIN_VALUE};
 		gbl_foundMoviesListPanel.rowWeights = new double[]{1.0, 0.0, 0.0};
 		foundMoviesListPanel.setLayout(gbl_foundMoviesListPanel);
-		
+
 		JPanel topFoundMoviesListPanel = new JPanel();
 		GridBagConstraints gbc_topFoundMoviesListPanel = new GridBagConstraints();
 		gbc_topFoundMoviesListPanel.weighty = 1.0;
@@ -673,71 +673,71 @@ public class SearchWindow extends JFrame implements Observer{
 		topFoundMoviesListPanel.add(lblRsultatDeLa, gbc_lblRsultatDeLa);
 		lblRsultatDeLa.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRsultatDeLa.setFont(new Font("Tahoma", Font.BOLD, 15));
-		
+
 		JScrollPane foundMoviesScrollPane = new JScrollPane();
 		GridBagConstraints gbc_foundMoviesScrollPane = new GridBagConstraints();
 		gbc_foundMoviesScrollPane.fill = GridBagConstraints.BOTH;
 		gbc_foundMoviesScrollPane.gridx = 0;
 		gbc_foundMoviesScrollPane.gridy = 1;
 		topFoundMoviesListPanel.add(foundMoviesScrollPane, gbc_foundMoviesScrollPane);
-		
-				foundMoviesList = new JList<Film>();
-				foundMoviesScrollPane.setViewportView(foundMoviesList);
-				foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				
+
+		foundMoviesList = new JList<Film>();
+		foundMoviesScrollPane.setViewportView(foundMoviesList);
+		foundMoviesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		foundMoviesList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		foundMoviesList.setCellRenderer(new FilmListCellRenderer());
-				
-				JPanel bottomFoundMoviesListPanel = new JPanel();
-				GridBagConstraints gbc_bottomFoundMoviesListPanel = new GridBagConstraints();
-				gbc_bottomFoundMoviesListPanel.weighty = 1.0;
-				gbc_bottomFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
-				gbc_bottomFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
-				gbc_bottomFoundMoviesListPanel.gridx = 0;
-				gbc_bottomFoundMoviesListPanel.gridy = 1;
-				foundMoviesListPanel.add(bottomFoundMoviesListPanel, gbc_bottomFoundMoviesListPanel);
-				GridBagLayout gbl_bottomFoundMoviesListPanel = new GridBagLayout();
-				gbl_bottomFoundMoviesListPanel.columnWidths = new int[]{0, 0};
-				gbl_bottomFoundMoviesListPanel.rowHeights = new int[] {0, 0};
-				gbl_bottomFoundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-				gbl_bottomFoundMoviesListPanel.rowWeights = new double[]{0.0, 1.0};
-				bottomFoundMoviesListPanel.setLayout(gbl_bottomFoundMoviesListPanel);
-				
-				JLabel lblRecommandations = new JLabel("Recommandations:");
-				lblRecommandations.setHorizontalAlignment(SwingConstants.CENTER);
-				lblRecommandations.setFont(new Font("Tahoma", Font.BOLD, 15));
-				GridBagConstraints gbc_lblRecommandations = new GridBagConstraints();
-				gbc_lblRecommandations.insets = new Insets(0, 0, 5, 0);
-				gbc_lblRecommandations.gridx = 0;
-				gbc_lblRecommandations.gridy = 0;
-				bottomFoundMoviesListPanel.add(lblRecommandations, gbc_lblRecommandations);
-				
-				JScrollPane recommandationsScrollPane = new JScrollPane();
-				GridBagConstraints gbc_recommandationsScrollPane = new GridBagConstraints();
-				gbc_recommandationsScrollPane.fill = GridBagConstraints.BOTH;
-				gbc_recommandationsScrollPane.gridx = 0;
-				gbc_recommandationsScrollPane.gridy = 1;
-				bottomFoundMoviesListPanel.add(recommandationsScrollPane, gbc_recommandationsScrollPane);
-				
-				recommandationsList = new JList<Film>();
-				recommandationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				recommandationsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-				recommandationsList.setCellRenderer(new FilmListCellRenderer());
-				recommandationsScrollPane.setViewportView(recommandationsList);
-						
-								JPanel foundMoviesListButtonsPanel = new JPanel();
-								GridBagConstraints gbc_foundMoviesListButtonsPanel = new GridBagConstraints();
-								gbc_foundMoviesListButtonsPanel.fill = GridBagConstraints.BOTH;
-								gbc_foundMoviesListButtonsPanel.insets = new Insets(0, 0, 5, 0);
-								gbc_foundMoviesListButtonsPanel.gridx = 0;
-								gbc_foundMoviesListButtonsPanel.gridy = 2;
-								foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
-								foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-								
-										rentMovieButton = new JButton("Louer ce film");
-										rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-										rentMovieButton.setEnabled(false);
-										foundMoviesListButtonsPanel.add(rentMovieButton);
+
+		JPanel bottomFoundMoviesListPanel = new JPanel();
+		GridBagConstraints gbc_bottomFoundMoviesListPanel = new GridBagConstraints();
+		gbc_bottomFoundMoviesListPanel.weighty = 1.0;
+		gbc_bottomFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
+		gbc_bottomFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
+		gbc_bottomFoundMoviesListPanel.gridx = 0;
+		gbc_bottomFoundMoviesListPanel.gridy = 1;
+		foundMoviesListPanel.add(bottomFoundMoviesListPanel, gbc_bottomFoundMoviesListPanel);
+		GridBagLayout gbl_bottomFoundMoviesListPanel = new GridBagLayout();
+		gbl_bottomFoundMoviesListPanel.columnWidths = new int[]{0, 0};
+		gbl_bottomFoundMoviesListPanel.rowHeights = new int[] {0, 0};
+		gbl_bottomFoundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_bottomFoundMoviesListPanel.rowWeights = new double[]{0.0, 1.0};
+		bottomFoundMoviesListPanel.setLayout(gbl_bottomFoundMoviesListPanel);
+
+		JLabel lblRecommandations = new JLabel("Recommandations:");
+		lblRecommandations.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRecommandations.setFont(new Font("Tahoma", Font.BOLD, 15));
+		GridBagConstraints gbc_lblRecommandations = new GridBagConstraints();
+		gbc_lblRecommandations.insets = new Insets(0, 0, 5, 0);
+		gbc_lblRecommandations.gridx = 0;
+		gbc_lblRecommandations.gridy = 0;
+		bottomFoundMoviesListPanel.add(lblRecommandations, gbc_lblRecommandations);
+
+		JScrollPane recommandationsScrollPane = new JScrollPane();
+		GridBagConstraints gbc_recommandationsScrollPane = new GridBagConstraints();
+		gbc_recommandationsScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_recommandationsScrollPane.gridx = 0;
+		gbc_recommandationsScrollPane.gridy = 1;
+		bottomFoundMoviesListPanel.add(recommandationsScrollPane, gbc_recommandationsScrollPane);
+
+		recommandationsList = new JList<Film>();
+		recommandationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		recommandationsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		recommandationsList.setCellRenderer(new FilmListCellRenderer());
+		recommandationsScrollPane.setViewportView(recommandationsList);
+
+		JPanel foundMoviesListButtonsPanel = new JPanel();
+		GridBagConstraints gbc_foundMoviesListButtonsPanel = new GridBagConstraints();
+		gbc_foundMoviesListButtonsPanel.fill = GridBagConstraints.BOTH;
+		gbc_foundMoviesListButtonsPanel.insets = new Insets(0, 0, 5, 0);
+		gbc_foundMoviesListButtonsPanel.gridx = 0;
+		gbc_foundMoviesListButtonsPanel.gridy = 2;
+		foundMoviesListPanel.add(foundMoviesListButtonsPanel, gbc_foundMoviesListButtonsPanel);
+		foundMoviesListButtonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+
+		rentMovieButton = new JButton("Louer ce film");
+		rentMovieButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		rentMovieButton.setEnabled(false);
+		foundMoviesListButtonsPanel.add(rentMovieButton);
 
 		contentPane.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -749,7 +749,7 @@ public class SearchWindow extends JFrame implements Observer{
 				criteriasPanel.revalidate();
 			}
 		});
-		
+
 		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				Film foundMovie = foundMoviesList.getSelectedValue();
@@ -760,7 +760,7 @@ public class SearchWindow extends JFrame implements Observer{
 				setSelectedMovie(foundMovie);
 			}
 		});
-		
+
 		recommandationsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				Film recommandedMovie = recommandationsList.getSelectedValue();
@@ -789,7 +789,7 @@ public class SearchWindow extends JFrame implements Observer{
 		}
 		recommandationsList.setModel(model);
 	}
-	
+
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)
 	{
 		int width = scrollPane.getViewport().getWidth() - 2 * CRITERIA_PANELS_MARGIN;
@@ -803,12 +803,12 @@ public class SearchWindow extends JFrame implements Observer{
 		return criteriasPanel.getComponents();
 
 	}
-	
+
 	public Film getSelectedMovie()
 	{
 		return foundMoviesList.getSelectedValue();
 	}
-	
+
 	public void addController (ActionListener controller)
 	{
 		searchButton.addActionListener(controller);
@@ -897,9 +897,9 @@ public class SearchWindow extends JFrame implements Observer{
 	@Override
 	public void update(Film contentToUpdate) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private void setSelectedMovie(Film film)
 	{
 		if (film == null)
@@ -921,7 +921,7 @@ public class SearchWindow extends JFrame implements Observer{
 			movieTitleTextField.setText(film.getTitre());
 			releaseYearTextField.setText(String.valueOf(film.getAnneeSortie()));
 			String pays="";
-			
+
 			for(PaysFilm p : film.getPaysFilms())
 				pays += p.getPays().getNom() +",";
 			productionCountryTextField.setText(pays);
@@ -950,7 +950,7 @@ public class SearchWindow extends JFrame implements Observer{
 				separateurScenaristes = ", ";
 			}
 			movieScenaristTextField.setText(scenaristes);
-			
+
 			if (realisateur == null)
 			{
 				directorTextField.setText(null);										

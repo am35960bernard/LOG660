@@ -1,13 +1,15 @@
 package UI;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.Window.Type;
+import org.hibernate.Query;
+
+import Model.Film;
+import Services.SimpleConnection;
+
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -15,10 +17,13 @@ import javax.swing.JComboBox;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class AnalysisWindow extends JFrame {
@@ -41,7 +46,7 @@ public class AnalysisWindow extends JFrame {
 			return value;
 		}
 		
-		public String getDescriptione() {
+		public String getDescription() {
 			return description;
 		}
 		
@@ -172,9 +177,33 @@ public class AnalysisWindow extends JFrame {
 		JButton searchButton = new JButton("Recherche");
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// Interrogate DB to get number of locations...
+				// Interrogate DB to get number of locations
+				String sql = "SELECT COUNT(*) FROM EDW_LOCATION JOIN EDW_TEMPS ON EDW_LOCATION.IDTEMPS = EDW_TEMPS.IDTEMPS "
+						+ "JOIN EDW_CLIENT ON EDW_LOCATION.IDCLIENT = EDW_CLIENT.IDCLIENT WHERE 1=1 ";
+				String valueAgeGroup = ((ComboBoxItem) ageGroupComboBox.getSelectedItem()).value;
+				String valueProvince = ((ComboBoxItem) provinceComboBox.getSelectedItem()).value;
+				String valueWeekDay = ((ComboBoxItem) weekDayComboBox.getSelectedItem()).value;
+				String valueMonth = ((ComboBoxItem) monthComboBox.getSelectedItem()).value;
 				
+				if (valueAgeGroup != null) { sql += "AND EDW_CLIENT.GROUPEAGE LIKE '" + valueAgeGroup + "' "; }
+				if (valueProvince != null) { sql += "AND EDW_CLIENT.PROVINCE LIKE '" + valueProvince + "' "; }
+				if (valueWeekDay != null) { sql += "AND EDW_TEMPS.JOUR LIKE '" + valueWeekDay + "' "; }
+				if (valueMonth != null) { sql += "AND EDW_TEMPS.MOIS LIKE '" + valueMonth + "' "; }
 				
+				try {
+			    	Connection con = SimpleConnection.GetSimpleDBConnection();
+				    PreparedStatement stmt = null;
+			        stmt = con.prepareStatement(sql);
+			        ResultSet rs = stmt.executeQuery();
+			        if (rs.next()) {
+			            int nbLocations = rs.getInt(1);
+			            
+			            nbLocationsTextField.setText("" + nbLocations);
+			        }
+			        stmt.close();
+			    } catch (SQLException e ) {
+					System.out.println(e);
+			    }
 			}
 		});
 		searchButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -183,9 +212,9 @@ public class AnalysisWindow extends JFrame {
 		ageGroupComboBox.addItem(new ComboBoxItem(null, "(tous)"));
 		for (int i = 0; i < 20; i++)
 		{
-			String value = Integer.toString(i);
-			String ageMin = Integer.toString(i * 5);
+			String ageMin = Integer.toString(i * 5 + 1);
 			String ageMax = Integer.toString((i + 1) * 5);
+			String value = "" + ageMin + "-" + ageMax;
 			String description = "de " + ageMin + " à " + ageMax + " ans";
 			ageGroupComboBox.addItem(new ComboBoxItem(value, description));
 		}

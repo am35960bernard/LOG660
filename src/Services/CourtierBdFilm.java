@@ -350,7 +350,7 @@ public class CourtierBdFilm {
 	        stmt.close();
 	    } catch (SQLException e ) {
 			System.out.println(e);
-	    }   
+	    }
 		return recommandations;
 	}
 }
