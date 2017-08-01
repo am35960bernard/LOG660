@@ -69,6 +69,7 @@ import Model.PersonnageDuCinema;
 import Model.Realisateur;
 import Model.RealisateurFilm;
 import Model.Scenariste;
+import Services.CourtierBdFilm;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -101,12 +102,13 @@ public class SearchWindow extends JFrame implements Observer{
 	private final ButtonGroup crewButtonGroup = new ButtonGroup();
 	private JButton searchButton;
 	private JList<Film> foundMoviesList;
+	private JList<Film> recommandationsList;
 	private JList<Acteur> actorsList;
 	private JRadioButton directorRadioButton;
 	private JRadioButton actorsRadioButton;
 	private JButton rentMovieButton;
 	private JTextField averageRatingTextField;
-
+	
 	/**
 	 * Create the frame.
 	 */
@@ -650,6 +652,7 @@ public class SearchWindow extends JFrame implements Observer{
 		
 		JPanel topFoundMoviesListPanel = new JPanel();
 		GridBagConstraints gbc_topFoundMoviesListPanel = new GridBagConstraints();
+		gbc_topFoundMoviesListPanel.weighty = 1.0;
 		gbc_topFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
 		gbc_topFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
 		gbc_topFoundMoviesListPanel.gridx = 0;
@@ -687,6 +690,7 @@ public class SearchWindow extends JFrame implements Observer{
 				
 				JPanel bottomFoundMoviesListPanel = new JPanel();
 				GridBagConstraints gbc_bottomFoundMoviesListPanel = new GridBagConstraints();
+				gbc_bottomFoundMoviesListPanel.weighty = 1.0;
 				gbc_bottomFoundMoviesListPanel.insets = new Insets(0, 0, 5, 0);
 				gbc_bottomFoundMoviesListPanel.fill = GridBagConstraints.BOTH;
 				gbc_bottomFoundMoviesListPanel.gridx = 0;
@@ -696,7 +700,7 @@ public class SearchWindow extends JFrame implements Observer{
 				gbl_bottomFoundMoviesListPanel.columnWidths = new int[]{0, 0};
 				gbl_bottomFoundMoviesListPanel.rowHeights = new int[] {0, 0};
 				gbl_bottomFoundMoviesListPanel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-				gbl_bottomFoundMoviesListPanel.rowWeights = new double[]{0.0, 0.0};
+				gbl_bottomFoundMoviesListPanel.rowWeights = new double[]{0.0, 1.0};
 				bottomFoundMoviesListPanel.setLayout(gbl_bottomFoundMoviesListPanel);
 				
 				JLabel lblRecommandations = new JLabel("Recommandations:");
@@ -715,10 +719,10 @@ public class SearchWindow extends JFrame implements Observer{
 				gbc_recommandationsScrollPane.gridy = 1;
 				bottomFoundMoviesListPanel.add(recommandationsScrollPane, gbc_recommandationsScrollPane);
 				
-				JList<Film> recommandationsList = new JList<Film>();
-				recommandationsList.setVisibleRowCount(3);
+				recommandationsList = new JList<Film>();
 				recommandationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				recommandationsList.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				recommandationsList.setCellRenderer(new FilmListCellRenderer());
 				recommandationsScrollPane.setViewportView(recommandationsList);
 						
 								JPanel foundMoviesListButtonsPanel = new JPanel();
@@ -748,18 +752,22 @@ public class SearchWindow extends JFrame implements Observer{
 		
 		foundMoviesList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				recommandationsList.clearSelection();
-				Film film = foundMoviesList.getSelectedValue();
-				setSelectedMovie(film);
-				showRecommandedMovies(film);
+				Film foundMovie = foundMoviesList.getSelectedValue();
+				if (foundMovie != null){
+					recommandationsList.clearSelection();
+					showRecommandedMovies(foundMovie);	
+				}
+				setSelectedMovie(foundMovie);
 			}
 		});
 		
 		recommandationsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				foundMoviesList.clearSelection();
-				Film film = recommandationsList.getSelectedValue();
-				setSelectedMovie(film);
+				Film recommandedMovie = recommandationsList.getSelectedValue();
+				if (recommandedMovie != null){
+					foundMoviesList.clearSelection();
+				}
+				setSelectedMovie(recommandedMovie);
 			}
 		});
 
@@ -770,7 +778,16 @@ public class SearchWindow extends JFrame implements Observer{
 
 	private void showRecommandedMovies(Film film)
 	{
-		
+		DefaultListModel<Film> model = new DefaultListModel<Film>();
+		if (film != null)
+		{
+			List<Film> films = CourtierBdFilm.getRecommandedMovies(film);
+			for (Film recommandedFilm: films)
+			{
+				model.addElement(recommandedFilm);
+			}
+		}
+		recommandationsList.setModel(model);
 	}
 	
 	private void setCriteriaPanelSize(JScrollPane scrollPane, JPanel criteriaPanel)

@@ -28,6 +28,9 @@ public class Film implements java.io.Serializable {
 	@SequenceGenerator(name="SEQ", sequenceName="SEQ_FILM")
 	private int idFilm;
 	
+    @Column(name="XMLID")
+	private int xmlId;
+	
 	@Column(name="TITRE")
 	private String titre;
 	
@@ -75,6 +78,14 @@ public class Film implements java.io.Serializable {
 
 	public void setIdFilm(int idFilm) {
 		this.idFilm = idFilm;
+	}
+	
+	public int getXmlId() {
+		return xmlId;
+	}
+
+	public void setXmlId(int xmlId) {
+		this.xmlId = xmlId;
 	}
 
 	public String getTitre() {

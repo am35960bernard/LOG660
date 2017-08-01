@@ -6,21 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
-
 import Controllers.StaticVariables;
 import Model.Exemplaire;
 import Model.Film;
@@ -329,27 +326,31 @@ public class CourtierBdFilm {
 		}
 	}
 	
-	public List<Film> getRecommandedMovies(Connection con, Film film)
+	public static List<Film> getRecommandedMovies(Film film)
 	{
-		List<Film> recommandedMovies = new ArrayList<Film>();
-
-	    PreparedStatement stmt = null;
-		String sql = "SELECT TOP 3 idfilmk FROM MATERIALIZED_CORRELATION_COTES WHERE idfilmj == ? ORDER BY correlation DESC";
+		ArrayList<Film> recommandations = new ArrayList<Film>();
 	    try {
+	    	Connection con = SimpleConnection.GetSimpleDBConnection();
+		    PreparedStatement stmt = null;
+			String sql = "SELECT * FROM (SELECT idfilmk FROM MATERIALIZED_CORRELATION_COTES WHERE idfilmj = ? ORDER BY correlation DESC) WHERE ROWNUM <= 3";
 	        stmt = con.prepareStatement(sql);
-	        stmt.setInt(1, film.getIdFilm());
-	        ResultSet rs = stmt.executeQuery(sql);
+	        stmt.setInt(1, film.getXmlId());
+	        ResultSet rs = stmt.executeQuery();
 	        while (rs.next()) {
 	            int recommandedMovieId = rs.getInt("idfilmk");
-				String hql = "SELECT DISTINCT f FROM Film f WHERE idfilm = :idfilm";
+				String hql = "SELECT DISTINCT f FROM Film f WHERE xmlid = :xmlid";
 				Query query = session.createQuery(hql);
-				query.setInteger("idfilm", recommandedMovieId);
+				query.setInteger("xmlid", recommandedMovieId);
+				for(Object obj : query.list())
+				{
+					Film recommandation = (Film)obj;
+					recommandations.add(recommandation);
+				}
 	        }
 	        stmt.close();
 	    } catch (SQLException e ) {
 			System.out.println(e);
-	    }
-	    
-		return recommandedMovies;
+	    }   
+		return recommandations;
 	}
 }
