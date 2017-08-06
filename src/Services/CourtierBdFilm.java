@@ -332,9 +332,20 @@ public class CourtierBdFilm {
 	    try {
 	    	Connection con = SimpleConnection.GetSimpleDBConnection();
 		    PreparedStatement stmt = null;
-			String sql = "SELECT * FROM (SELECT idfilmk FROM MATERIALIZED_CORRELATION_COTES WHERE idfilmj = ? ORDER BY correlation DESC) WHERE ROWNUM <= 3";
+			String sql = "SELECT * FROM ("
+					+ "    SELECT idfilmk FROM MATERIALIZED_CORRELATION_COTES"
+					+ "    WHERE idfilmj = ? AND idfilmk NOT IN ("
+					+ "        SELECT DISTINCT F.xmlid"
+					+ "        FROM \"LOCATION\" L"
+					+ "        NATURAL JOIN EXEMPLAIRE E"
+					+ "        NATURAL JOIN FILM F"
+					+ "        WHERE L.idclient = ?"
+					+ "    )"
+					+ "   ORDER BY correlation DESC"
+					+ ") WHERE ROWNUM <= 3";
 	        stmt = con.prepareStatement(sql);
 	        stmt.setInt(1, film.getXmlId());
+	        stmt.setInt(2, StaticVariables.client.getIdUtilisateur());
 	        ResultSet rs = stmt.executeQuery();
 	        while (rs.next()) {
 	            int recommandedMovieId = rs.getInt("idfilmk");
