@@ -806,7 +806,14 @@ public class SearchWindow extends JFrame implements Observer{
 
 	public Film getSelectedMovie()
 	{
-		return foundMoviesList.getSelectedValue();
+		if (foundMoviesList.getSelectedValue() != null)
+		{
+			return foundMoviesList.getSelectedValue();
+		}
+		else
+		{
+			return recommandationsList.getSelectedValue();
+		}
 	}
 
 	public void addController (ActionListener controller)
